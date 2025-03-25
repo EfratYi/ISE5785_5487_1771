@@ -10,7 +10,6 @@ public class Tube extends RadialGeometry{
         super(radius);
         this._ray=ray;
     }
-
     @Override
     public Vector getNormal(Point point) {
         return null;
