@@ -22,10 +22,7 @@ public class Vector extends Point {
      * @param z the z coordinate
      */
     public Vector(double x, double y, double z) {
-        super(x, y, z);
-        if (this.xyz.equals( Double3.ZERO)) {
-            throw new IllegalArgumentException("Zero vector is illegal");
-        }
+        this(new Double3(x, y, z));
     }
 
     @Override
