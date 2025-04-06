@@ -6,6 +6,9 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Polygon class.
+ */
 class PolygonTests {
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
@@ -15,6 +18,7 @@ class PolygonTests {
 
     /**
      * Test method for {@link geometries.Polygon#Polygon(primitives.Point...)}.
+     * This test checks the constructor of the Polygon class.
      */
     @Test
     void testConstructor() {
@@ -65,6 +69,7 @@ class PolygonTests {
 
     /**
      * Test method for {@link geometries.Polygon#getNormal(primitives.Point)}.
+     * This test checks the getNormal method of the Polygon class.
      */
     @Test
     void testGetNormal() {

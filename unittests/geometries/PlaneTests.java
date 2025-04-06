@@ -6,15 +6,21 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Plane class.
+ */
 class PlaneTests {
 
+    /**
+     * Test method for {@link geometries.Plane#Plane(Point, Point, Point)}.
+     * This test checks the constructor of the Plane class.
+     */
     @Test
     void testConstructor() {
-
         assertDoesNotThrow(() -> new Plane(
-                new Point(0, 0, 0),
-                new Point(1, 0, 0),
-                new Point(1, 2, 0)),
+                        new Point(0, 0, 0),
+                        new Point(1, 0, 0),
+                        new Point(1, 2, 0)),
                 "Failed constructing a correct plane");
 
         assertThrows(IllegalArgumentException.class,
@@ -46,18 +52,24 @@ class PlaneTests {
                         new Point(1, 1, 1),
                         new Point(1, 1, 1)),
                 "Constructed a plane with all points being the same");
-
     }
 
+    /**
+     * Test method for {@link geometries.Plane#getNormal(Point)}.
+     * This test checks the getNormal method of the Plane class.
+     */
     @Test
     void testgetNormal() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: There is a simple single test here
         Plane pl = new Plane(new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 0, 1));
         assertEquals(new Vector(1, 1, 1).normalize(), pl.getNormal(new Point(0, 0, 0)), "Bad normal to triangle");
-
     }
 
+    /**
+     * Test method for {@link geometries.Plane#getNormal()}.
+     * This test checks the getNormal method of the Plane class.
+     */
     @Test
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
