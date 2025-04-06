@@ -88,4 +88,8 @@ public class Vector extends Point {
                 xyz.d3() * other.xyz.d1() - xyz.d1() * other.xyz.d3(),
                 xyz.d1() * other.xyz.d2() - xyz.d2() * other.xyz.d1());
     }
+
+    public Vector scale(double t) {
+        return new Vector(xyz.scale(t));
+    }
 }

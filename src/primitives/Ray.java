@@ -7,4 +7,10 @@ public class Ray {
         head = p;
         direction = v.normalize();
     }
+    public Point getHead() {
+        return head;
+    }
+    public Vector getDirection() {
+        return direction;
+    }
 }
