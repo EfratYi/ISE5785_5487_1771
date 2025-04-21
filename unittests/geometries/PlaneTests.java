@@ -67,7 +67,7 @@ class PlaneTests {
     }
 
     /**
-     * Test method for {@link geometries.Plane#getNormal()}.
+     * Test method for {@link geometries.Plane# getNormal()}.
      * This test checks the getNormal method of the Plane class.
      */
     @Test
@@ -75,6 +75,6 @@ class PlaneTests {
         // ============ Equivalence Partitions Tests ==============
         // TC01: There is a simple single test here
         Plane pl = new Plane(new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 0, 1));
-        assertEquals(new Vector(1, 1, 1).normalize(), pl.getNormal(), "Bad normal to triangle");
+        assertEquals(new Vector(1, 1, 1).normalize(), pl.getNormal(null), "Bad normal to triangle");
     }
 }
