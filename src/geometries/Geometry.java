@@ -7,7 +7,7 @@ import primitives.Vector;
  * Abstract class representing a geometric object in 3D space.
  * Provides a method to calculate the normal vector at a given point on the geometry.
  */
-public abstract class Geometry {
+public abstract class Geometry extends Intersectable{
 
     /**
      * Calculates the normal vector to the geometry at the specified point.

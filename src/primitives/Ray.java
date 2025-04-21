@@ -1,5 +1,7 @@
 package primitives;
 
+import static primitives.Util.isZero;
+
 /**
  * Class representing a ray in 3D space, defined by a starting point (head) and a direction vector.
  */
@@ -43,4 +45,13 @@ public class Ray {
     public Vector getDirection() {
         return direction;
     }
+
+    public Point getPoint(double t) {
+        if (isZero(t)) {
+            return head;
+        }
+        return head.add(direction.scale(t));
+    }
+
+
 }

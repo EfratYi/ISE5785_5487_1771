@@ -8,7 +8,7 @@ public abstract class RadialGeometry extends Geometry {
     /**
      * The radius of the radial geometry.
      */
-    final double _radius;
+    final double radius;
 
     /**
      * Constructor to initialize a radial geometry with a given radius.
@@ -16,6 +16,6 @@ public abstract class RadialGeometry extends Geometry {
      * @param radius the radius of the radial geometry
      */
     public RadialGeometry(double radius) {
-        _radius = radius;
+        this.radius = radius;
     }
 }
