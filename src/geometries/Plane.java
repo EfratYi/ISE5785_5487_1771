@@ -7,6 +7,7 @@ import primitives.Vector;
 import java.util.List;
 
 import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * This class represents a Plane in 3D space, defined by a point and a normal vector.
@@ -57,11 +58,11 @@ public class Plane extends Geometry {
 
         // Check if the ray is parallel to the plane
         double denominator = normal.dotProduct(ray.getDirection());
-        if (denominator == 0) {
+        if (denominator==0) {
             return null; // The ray is parallel to the plane
         }
         if(q.equals(ray.getHead())){
-            return List.of(q); // The ray starts on the plane
+            return null;// The ray starts on the plane
         }
         // Calculate the numerator for the intersection point
         double numerator = alignZero(normal.dotProduct(q.subtract(ray.getHead())));
