@@ -11,7 +11,8 @@ import static primitives.Util.isZero;
 
 /**
  * This class represents a Plane in 3D space, defined by a point and a normal vector.
- * It extends the Geometry class.
+ * It extends the Geometry class and provides methods to calculate the normal vector
+ * and find intersections with a given ray.
  */
 public class Plane extends Geometry {
     /**
@@ -25,10 +26,13 @@ public class Plane extends Geometry {
     protected final Vector normal;
 
     /**
-     * Constructor to initialize a Plane object with three points
+     * Constructor to initialize a Plane object with three points.
+     * The three points must not be collinear.
+     *
      * @param p1 the first point defining the plane
      * @param p2 the second point defining the plane
      * @param p3 the third point defining the plane
+     * @throws IllegalArgumentException if the points are collinear
      */
     public Plane(Point p1, Point p2, Point p3) {
         super();
@@ -40,6 +44,7 @@ public class Plane extends Geometry {
 
     /**
      * Constructor to initialize a Plane object with a point and a normal vector.
+     *
      * @param q the point on the plane
      * @param normal the normal vector of the plane
      */
@@ -48,21 +53,35 @@ public class Plane extends Geometry {
         this.normal = normal.normalize();
     }
 
+    /**
+     * Returns the normal vector to the plane.
+     * The normal vector is constant for all points on the plane.
+     *
+     * @param unused a point on the plane (not used in this implementation)
+     * @return the normal vector of the plane
+     */
     @Override
     public Vector getNormal(Point unused) {
         return normal;
     }
 
+    /**
+     * Finds the intersection points of a given ray with the plane.
+     * If the ray is parallel to the plane or starts on the plane, there are no intersections.
+     *
+     * @param ray the ray to intersect with the plane
+     * @return a list of intersection points if the ray intersects the plane,
+     *         or null if there are no intersections
+     */
     @Override
     List<Point> findIntersections(Ray ray) {
-
         // Check if the ray is parallel to the plane
         double denominator = normal.dotProduct(ray.getDirection());
-        if (denominator==0) {
+        if (denominator == 0) {
             return null; // The ray is parallel to the plane
         }
-        if(q.equals(ray.getHead())){
-            return null;// The ray starts on the plane
+        if (q.equals(ray.getHead())) {
+            return null; // The ray starts on the plane
         }
         // Calculate the numerator for the intersection point
         double numerator = alignZero(normal.dotProduct(q.subtract(ray.getHead())));

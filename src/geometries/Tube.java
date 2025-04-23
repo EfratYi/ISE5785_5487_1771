@@ -59,6 +59,13 @@ public class Tube extends RadialGeometry {
         return normal.normalize();
     }
 
+    /**
+     * Finds the intersection points of a given ray with the tube.
+     * Currently, this method is not implemented and returns an empty list.
+     *
+     * @param ray the ray to intersect with the tube
+     * @return a list of intersection points (empty for now)
+     */
     @Override
     List<Point> findIntersections(Ray ray) {
         return List.of();

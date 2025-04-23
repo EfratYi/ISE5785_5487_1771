@@ -9,7 +9,7 @@ import static primitives.Util.isZero;
 /**
  * This class represents a Polygon, a 2D shape in 3D Cartesian coordinates.
  * It extends the Geometry class and is defined by a list of vertices and a plane.
- * A polygon can have any number of vertices, but must be convex.
+ * A polygon can have any number of vertices, but it must be convex and lie in the same plane.
  */
 public class Polygon extends Geometry {
     /**
@@ -29,9 +29,11 @@ public class Polygon extends Geometry {
 
     /**
      * Constructor to initialize a Polygon object with a list of vertices.
-     * The list must be ordered by edge path and the polygon must be convex.
+     * The list must be ordered by edge path, and the polygon must be convex.
+     *
      * @param vertices list of vertices ordered by edge path
-     * @throws IllegalArgumentException if the vertices are invalid
+     * @throws IllegalArgumentException if the vertices are invalid (e.g., not in the same plane,
+     *                                  not ordered, or the polygon is not convex)
      */
     public Polygon(Point... vertices) {
         if (vertices.length < 3)
@@ -41,28 +43,44 @@ public class Polygon extends Geometry {
 
         // Generate the plane based on the first three vertices
         plane = new Plane(vertices[0], vertices[1], vertices[2]);
-        if (size == 3) return;
+        if (size == 3) return; // A triangle is always convex
 
-        Vector n = plane.getNormal(null);//
+        Vector n = plane.getNormal(null);
         Vector edge1 = vertices[size - 1].subtract(vertices[size - 2]);
         Vector edge2 = vertices[0].subtract(vertices[size - 1]);
 
         boolean positive = edge1.crossProduct(edge2).dotProduct(n) > 0;
         for (var i = 1; i < size; ++i) {
             if (!isZero(vertices[i].subtract(vertices[0]).dotProduct(n)))
-                throw new IllegalArgumentException("All vertices of a polygon must lay in the same plane");
+                throw new IllegalArgumentException("All vertices of a polygon must lie in the same plane");
             edge1 = edge2;
             edge2 = vertices[i].subtract(vertices[i - 1]);
             if (positive != (edge1.crossProduct(edge2).dotProduct(n) > 0))
-                throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
+                throw new IllegalArgumentException("All vertices must be ordered, and the polygon must be convex");
         }
     }
 
+    /**
+     * Returns the normal vector to the polygon at a given point.
+     * The normal vector is the same for all points on the polygon since it lies in a single plane.
+     *
+     * @param point the point on the polygon (not used in this implementation)
+     * @return the normal vector to the polygon
+     */
     @Override
     public Vector getNormal(Point point) {
-        return plane.getNormal(null);//
+        return plane.getNormal(null);
     }
 
+    /**
+     * Finds the intersection points of a given ray with the polygon.
+     * This method first checks if the ray intersects the plane of the polygon.
+     * If it does, it then checks if the intersection point lies inside the polygon.
+     *
+     * @param ray the ray to intersect with the polygon
+     * @return a list of intersection points if the ray intersects the polygon,
+     *         or null if there are no intersections
+     */
     @Override
     List<Point> findIntersections(Ray ray) {
         // Check if the ray intersects the plane
