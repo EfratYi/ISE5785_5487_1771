@@ -3,7 +3,9 @@ package geometries;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+
 import java.util.List;
+
 import static primitives.Util.isZero;
 
 /**
@@ -69,7 +71,7 @@ public class Polygon extends Geometry {
      */
     @Override
     public Vector getNormal(Point point) {
-        return plane.getNormal(null);
+        return plane.getNormal(point);
     }
 
     /**
@@ -79,7 +81,7 @@ public class Polygon extends Geometry {
      *
      * @param ray the ray to intersect with the polygon
      * @return a list of intersection points if the ray intersects the polygon,
-     *         or null if there are no intersections
+     * or null if there are no intersections
      */
     @Override
     List<Point> findIntersections(Ray ray) {

@@ -16,6 +16,7 @@ public class Point {
 
     /**
      * Constructor to initialize Point based on Double3 object.
+     *
      * @param xyz the Double3 object containing the coordinates
      */
     public Point(Double3 xyz) {
@@ -24,6 +25,7 @@ public class Point {
 
     /**
      * Constructor to initialize Point based on x, y, z coordinates.
+     *
      * @param x the x coordinate
      * @param y the y coordinate
      * @param z the z coordinate
@@ -51,6 +53,7 @@ public class Point {
 
     /**
      * Adds a vector to this point.
+     *
      * @param vector the vector to add
      * @return a new Point resulting from the addition
      */
@@ -60,6 +63,7 @@ public class Point {
 
     /**
      * Calculates the squared distance between this point and another point.
+     *
      * @param other the other point
      * @return the squared distance
      */
@@ -72,6 +76,7 @@ public class Point {
 
     /**
      * Calculates the distance between this point and another point.
+     *
      * @param other the other point
      * @return the distance
      */
@@ -81,6 +86,7 @@ public class Point {
 
     /**
      * Subtracts another point from this point to create a vector.
+     *
      * @param other the other point
      * @return a new Vector resulting from the subtraction
      */

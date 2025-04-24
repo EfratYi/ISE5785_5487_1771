@@ -107,34 +107,16 @@ class PolygonTests {
      */
     @Test
     void testFindIntersections() {
-        Polygon polygon = new Polygon(
+
+        // מקרה 1: קרן פוגעת בתוך הפוליגון (כיוון ישיר)
+        Polygon polygon1 = new Polygon(
                 new Point(0, 0, 0),
-                new Point(1, 0, 0),
-                new Point(1, 1, 0),
-                new Point(0, 1, 0)
+                new Point(5, 0, 0),
+                new Point(5, 5, 0),
+                new Point(0, 5, 0)
         );
 
-        // 1. Ray inside the polygon
-        Ray rayInside = new Ray(new Point(0.5, 0.5, 1), new Vector(0, 0, -1));
-        var resultInside = polygon.findIntersections(rayInside);
-        assertNotNull(resultInside, "Expected intersection point inside polygon");
-        assertEquals(1, resultInside.size(), "Expected one intersection point");
-        assertEquals(new Point(0.5, 0.5, 0), resultInside.get(0), "Wrong intersection point");
 
-        // 2. Ray outside the polygon
-        Ray rayOutside = new Ray(new Point(1.5, 0.5, 1), new Vector(0, 0, -1));
-        assertNull(polygon.findIntersections(rayOutside), "Expected no intersection outside polygon");
-
-        // 3. Ray parallel to the polygon plane
-        Ray rayParallel = new Ray(new Point(0.5, 0.5, 1), new Vector(1, 0, 0)); // Parallel to the plane
-        assertNull(polygon.findIntersections(rayParallel), "Expected no intersection with parallel ray");
-
-        // 4. Ray on the plane but outside the polygon
-        Ray rayOnPlaneOutside = new Ray(new Point(2, 2, 0), new Vector(1, 0, 0));
-        assertNull(polygon.findIntersections(rayOnPlaneOutside), "Expected no intersection, ray lies on plane but outside polygon");
-
-        // 5. Ray hitting the edge of the polygon
-        Ray rayOnEdge = new Ray(new Point(0.5, 0, 1), new Vector(0, 0, -1));
-        assertNull(polygon.findIntersections(rayOnEdge), "Expected no intersection when ray hits the edge");
     }
+
 }

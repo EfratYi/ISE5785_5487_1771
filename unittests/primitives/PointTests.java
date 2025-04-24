@@ -3,6 +3,7 @@ package primitives;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class PointTests {
     private final Point p1 = new Point(1, 2, 3);
     private final Point p2 = new Point(4, 5, 6);

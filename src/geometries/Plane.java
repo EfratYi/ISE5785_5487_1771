@@ -45,7 +45,7 @@ public class Plane extends Geometry {
     /**
      * Constructor to initialize a Plane object with a point and a normal vector.
      *
-     * @param q the point on the plane
+     * @param q      the point on the plane
      * @param normal the normal vector of the plane
      */
     public Plane(Point q, Vector normal) {
@@ -71,7 +71,7 @@ public class Plane extends Geometry {
      *
      * @param ray the ray to intersect with the plane
      * @return a list of intersection points if the ray intersects the plane,
-     *         or null if there are no intersections
+     * or null if there are no intersections
      */
     @Override
     List<Point> findIntersections(Ray ray) {
