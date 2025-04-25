@@ -7,20 +7,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 /**
- * Class representing a collection of geometric shapes.
- * This class allows grouping multiple geometries and finding their intersections with a given ray.
+ * The Geometries class represents a collection of geometric shapes.
+ * It allows adding multiple geometries and finding their intersections with a given ray.
  */
 public class Geometries extends Intersectable {
 
     /**
-     * List of geometric shapes in the collection.
+     * A list that holds all the geometric shapes in the collection.
      */
     private final List<Intersectable> shapes = new LinkedList<>();
 
     /**
-     * Constructor to initialize the collection with a variable number of geometries.
+     * Constructs a Geometries object and initializes it with the given geometries.
      *
      * @param geometries the geometries to add to the collection
      */
@@ -46,16 +45,19 @@ public class Geometries extends Intersectable {
      */
     @Override
     List<Point> findIntersections(Ray ray) {
-        List<Point> intersections = new LinkedList<>();
+        if (shapes.isEmpty()) {
+            return null;
+        }
+        List<Point> intersections = null;  // Initialize as null
         for (Intersectable shape : shapes) {
             List<Point> shapeIntersections = shape.findIntersections(ray);
             if (shapeIntersections != null) {
+                if (intersections == null) {
+                    intersections = new LinkedList<>();  // Initialize only if there are intersections
+                }
                 intersections.addAll(shapeIntersections);
             }
         }
-        if (intersections.isEmpty()) {
-            return null;
-        }
-        return intersections;
+        return intersections;  // Return null if no intersections
     }
 }
