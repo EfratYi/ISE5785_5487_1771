@@ -150,5 +150,29 @@ public class SphereTest {
         Ray ray13 = new Ray(new Point(0, 1.5, -0.5), new Vector(0, 0, 1));
         var result13 = sphere.findIntersections(ray13);
         assertNull(result13, "Ray intersects the sphere but got null");
+
+
+
+
+
+
+        final Point gp1 = new Point(0.0651530771650466, 0.355051025721682, 0);
+        final Point gp2 = new Point(1.53484692283495, 0.844948974278318, 0);
+        final var exp = List.of(gp1, gp2);
+        final Vector v310 = new Vector(3, 1, 0);
+        final Vector v110 = new Vector(1, 1, 0);
+        final Point p01 = new Point(-1, 0, 0);
+
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray's line is outside the sphere (0 points)
+        assertNull(sphere.findIntersections(new Ray(p01, v110)), "Ray's line out of sphere");
+        // TC02: Ray starts before and crosses the sphere (2 points)
+
+        final var result15 = sphere.findIntersections(new Ray(p01, v310));
+        assertNotNull(result15, "Can't be empty list");
+        assertEquals(2, result15.size(), "Wrong number of points");
+        assertEquals(exp, result15, "Ray crosses sphere");
+
     }
 }

@@ -1,6 +1,7 @@
 package renderer;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class Camera implements Cloneable {
     private double height = 0.0;
 
 
-    public Builder getBuilder() {
+    public static Builder getBuilder() {
         return new Builder();
     }
 
@@ -62,6 +63,11 @@ public class Camera implements Cloneable {
         return height;
     }
 
+    public List<Point> constructRay(int nX, int nY, int j, int i) {
+        //Implementation of ray construction through pixel
+        return null;
+    }
+
 
     public static class Builder {
         private final Camera camera = new Camera();
@@ -74,6 +80,15 @@ public class Camera implements Cloneable {
             camera.vTo = vTo.normalize();
             camera.vUp = vUp.normalize();
             camera.vRight = vTo.crossProduct(vUp).normalize();
+        }
+        public Builder setDirection(Point target) {
+            //Todo
+            return this;
+        }
+
+        public Builder setDirection(Point target2, Vector vUp) {
+            //Todo
+            return this;
         }
 
         public Builder setLocation(Point p0) {
@@ -106,6 +121,10 @@ public class Camera implements Cloneable {
             } catch (CloneNotSupportedException e) {
                 return null;
             }
+        }
+
+        public void setResolution(int i, int i1) {
+            //Todo
         }
 
     }
