@@ -11,7 +11,7 @@ class VectorTests {
     private static final double DELTA = 0.000001;
     private final Vector v123 = new Vector(1, 2, 3);
     private final Vector v03M2 = new Vector(0, 3, -2);
-    private final Vector vM2M4M6 = new Vector(-2, -4, -6);
+    private final Vector vM2M4M6 = new Vector(-1, -2, -3);
 
     /**
      * Test method for {@link primitives.Vector#Vector(double, double, double)}.
@@ -40,8 +40,7 @@ class VectorTests {
 
         // =============== Boundary Values Tests ==================
         // TC10: Zero vector (should throw an exception)
-        // assertThrows(IllegalArgumentException.class, () -> v123.add(vM2M4M6),
-        // "add() for zero vector should throw an exception");
+         assertThrows(IllegalArgumentException.class, () -> v123.add(vM2M4M6), "add() for zero vector should throw an exception");
     }
 
     /**
@@ -75,11 +74,10 @@ class VectorTests {
         assertEquals(0, dp, DELTA, "dotProduct() wrong result");
         // TC02: Normal vector
         dp = v123.dotProduct(vM2M4M6);
-        assertEquals(-28, dp, DELTA, "dotProduct() wrong result");
-        // =============== Boundary Values Tests ==================
-        // TC10: Zero vector (should throw an exception)
-        // assertThrows(IllegalArgumentException.class, () -> v123.dotProduct(v123), //
-        // "dotProduct() for zero vector should throw an exception");
+        assertEquals(-14, dp, DELTA, "dotProduct() wrong result");
+        // TC03: Dot product of a vector with itself
+        dp = v123.dotProduct(v123);
+        assertEquals(14, dp, DELTA, "dotProduct() wrong result");
     }
 
     /**
@@ -111,10 +109,7 @@ class VectorTests {
         // TC01: Normal vector
         double ls = v123.lengthSquared();
         assertEquals(14, ls, DELTA, "lengthSquared() wrong result");
-        // =============== Boundary Values Tests ==================
-        // TC10: Zero vector (should throw an exception)
-        // assertThrows(IllegalArgumentException.class, () -> v123.lengthSquared(), //
-        // "lengthSquared() for zero vector should throw an exception");
+
     }
 
     /**

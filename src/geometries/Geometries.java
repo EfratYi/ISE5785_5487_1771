@@ -44,7 +44,7 @@ public class Geometries extends Intersectable {
      * @return a list of intersection points, or null if there are no intersections
      */
     @Override
-    List<Point> findIntersections(Ray ray) {
+    public List<Point> findIntersections(Ray ray) {
         if (shapes.isEmpty()) {
             return null;
         }

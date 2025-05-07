@@ -5,7 +5,7 @@ package primitives;
  */
 public class Vector extends Point {
 
-    public static final Vector AXIS_Z=new Vector(0, 0, -1);
+    public static final Vector AXIS_Z=new Vector(0, 0, 1);
     public static final Vector AXIS_Y=new Vector(0, 1, 0);
     public static final Vector AXIS_X=new Vector(1, 0, 0);
 
@@ -96,10 +96,13 @@ public class Vector extends Point {
      * @return a new Vector that is the cross product of this vector and the other vector
      */
     public Vector crossProduct(Vector other) {
-        return new Vector(
-                xyz.d2() * other.xyz.d3() - xyz.d3() * other.xyz.d2(),
-                xyz.d3() * other.xyz.d1() - xyz.d1() * other.xyz.d3(),
-                xyz.d1() * other.xyz.d2() - xyz.d2() * other.xyz.d1());
+        double xx = this.xyz.d2() * other.xyz.d3() - this.xyz.d3() * other.xyz.d2();
+        double yy = this.xyz.d3() * other.xyz.d1() - this.xyz.d1() * other.xyz.d3();
+        double zz = this.xyz.d1() * other.xyz.d2() - this.xyz.d2() * other.xyz.d1();
+        if (xx == 0 && yy == 0 && zz == 0) {
+            throw new IllegalArgumentException("Cross product results in a zero vector.");
+        }
+        return new Vector(xx, yy, zz);
     }
 
     public Vector scale(double t) {

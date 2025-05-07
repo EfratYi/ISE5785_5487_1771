@@ -13,6 +13,5 @@ class GeometriesTests {
     @Test
     void testfindIntersections() {
 
-
     }
 }

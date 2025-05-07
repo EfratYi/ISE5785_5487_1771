@@ -1,5 +1,7 @@
 package primitives;
 
+import java.util.Objects;
+
 import static primitives.Util.isZero;
 
 /**
@@ -28,6 +30,15 @@ public class Ray {
         direction = v.normalize();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        return (o instanceof Ray other)
+                && this.head.equals(other.head)
+                && this.direction.equals(other.direction);
+    }
+
+
     /**
      * Getter for the starting point of the ray.
      *
@@ -53,5 +64,13 @@ public class Ray {
         return head.add(direction.scale(t));
     }
 
+
+    @Override
+    public String toString() {
+        return "Ray{" +
+                "p=" + head +
+                ", v=" + direction +
+                '}';
+    }
 
 }
