@@ -67,7 +67,7 @@ public class Tube extends RadialGeometry {
      * @return a list of intersection points (empty for now)
      */
     @Override
-    List<Point> findIntersections(Ray ray) {
+   public List<Point> findIntersections(Ray ray) {
         return List.of();
     }
 }

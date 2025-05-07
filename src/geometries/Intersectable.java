@@ -18,5 +18,5 @@ public abstract class Intersectable {
      * @param ray the ray to intersect with the geometry
      * @return a list of intersection points, or null if there are no intersections
      */
-    abstract List<Point> findIntersections(Ray ray);
+    public abstract List<Point> findIntersections(Ray ray);
 }
