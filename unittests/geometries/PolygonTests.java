@@ -1,35 +1,32 @@
 package geometries;
 
-import org.junit.jupiter.api.Test;
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import geometries.Plane;
+import geometries.Polygon;
+import primitives.*;
 
 /**
- * Unit tests for the Polygon class.
+ * Testing Polygons
+ * @author Dan
  */
 class PolygonTests {
     /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
-     * assertEquals.
+     * assertEquals
      */
     private static final double DELTA = 0.000001;
 
-    /**
-     * Test method for {@link geometries.Polygon#Polygon(primitives.Point...)}.
-     * This test checks the constructor of the Polygon class.
-     * It verifies that the constructor works for valid polygons and throws exceptions
-     * for invalid polygons (e.g., wrong vertex order, non-planar vertices, concave polygons).
-     */
+    /** Test method for {@link geometries.Polygon#Polygon(primitives.Point...)}. */
     @Test
     void testConstructor() {
         // ============ Equivalence Partitions Tests ==============
 
-        // TC01: Correct convex quadrangular with vertices in correct order
+        // TC01: Correct concave quadrangular with vertices in correct order
         assertDoesNotThrow(() -> new Polygon(new Point(0, 0, 1),
                         new Point(1, 0, 0),
                         new Point(0, 1, 0),
@@ -58,30 +55,27 @@ class PolygonTests {
         assertThrows(IllegalArgumentException.class, //
                 () -> new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0),
                         new Point(0, 0.5, 0.5)),
-                "Constructed a polygon with vertex on a side");
+                "Constructed a polygon with vertix on a side");
 
         // TC11: Last point = first point
         assertThrows(IllegalArgumentException.class, //
                 () -> new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 0, 1)),
-                "Constructed a polygon with duplicate vertices");
+                "Constructed a polygon with vertice on a side");
 
         // TC12: Co-located points
         assertThrows(IllegalArgumentException.class, //
                 () -> new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 1, 0)),
-                "Constructed a polygon with co-located vertices");
+                "Constructed a polygon with vertice on a side");
+
     }
 
-    /**
-     * Test method for {@link geometries.Polygon#getNormal(primitives.Point)}.
-     * This test checks the getNormal method of the Polygon class.
-     * It ensures that the normal vector is a unit vector and is orthogonal to all edges of the polygon.
-     */
+    /** Test method for {@link geometries.Polygon#getNormal(primitives.Point)}. */
     @Test
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: There is a simple single test here - using a quad
         Point[] pts =
-                {new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1)};
+                { new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1) };
         Polygon pol = new Polygon(pts);
         // ensure there are no exceptions
         assertDoesNotThrow(() -> pol.getNormal(new Point(0, 0, 1)), "");
@@ -94,29 +88,4 @@ class PolygonTests {
             assertEquals(0d, result.dotProduct(pts[i].subtract(pts[i == 0 ? 3 : i - 1])), DELTA,
                     "Polygon's normal is not orthogonal to one of the edges");
     }
-
-    /**
-     * Test method for {@link geometries.Polygon#findIntersections(primitives.Ray)}.
-     * This test checks the findIntersections method of the Polygon class.
-     * It verifies the behavior of the method for rays that:
-     * 1. Intersect inside the polygon.
-     * 2. Miss the polygon.
-     * 3. Are parallel to the polygon plane.
-     * 4. Lie on the polygon plane but outside the polygon.
-     * 5. Hit the edge or vertex of the polygon.
-     */
-    @Test
-    void testFindIntersections() {
-
-        // מקרה 1: קרן פוגעת בתוך הפוליגון (כיוון ישיר)
-        Polygon polygon1 = new Polygon(
-                new Point(0, 0, 0),
-                new Point(5, 0, 0),
-                new Point(5, 5, 0),
-                new Point(0, 5, 0)
-        );
-
-
-    }
-
 }

@@ -23,7 +23,7 @@ public class Camera implements Cloneable {
     private Vector vTo = new Vector(0, 0, -1);
     private Vector vUp = new Vector(0, -1, 0);
     private Vector vRight = new Vector(-1, 0, 0);
-    private Point p0;
+    private Point p0 = Point.ZERO;
     private double distance = 0.0;
     private double width = 0.0;
     private double height = 0.0;
@@ -139,13 +139,14 @@ public class Camera implements Cloneable {
          * @param vUp the up direction vector
          * @throws IllegalArgumentException if vTo and vUp are not orthogonal
          */
-        public void setDirection(Vector vTo, Vector vUp) {
+        public Builder setDirection(Vector vTo, Vector vUp) {
             if (!isZero(vUp.dotProduct(vTo))) {
                 throw new IllegalArgumentException("vUp and vTo must be orthogonal");
             }
             camera.vTo = vTo.normalize();
             camera.vUp = vUp.normalize();
             camera.vRight = vTo.crossProduct(vUp).normalize();
+            return this;
         }
 
         /**
