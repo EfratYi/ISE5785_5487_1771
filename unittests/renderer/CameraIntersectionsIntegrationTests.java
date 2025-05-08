@@ -11,13 +11,13 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CameraIntersectionsIntegrationTestss {
+class CameraIntersectionsIntegrationTests {
 
 
     private final Camera.Builder cameraBuilder = Camera.getBuilder()
-            .setDirection(new Point(0, 0, 1), Vector.AXIS_Y)
-            .setVpSize(3, 3)
-            .setVpDistance(1);
+            .setVpDistance(1)
+            .setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0))
+            .setVpSize(3, 3);
 
     private final Camera camera1 = cameraBuilder.setLocation(Point.ZERO).build();
     private final Camera camera2 = cameraBuilder.setLocation(new Point(0, 0, 0.5)).build();
@@ -47,23 +47,23 @@ class CameraIntersectionsIntegrationTestss {
         assertCountIntersections(camera2, new Sphere(new Point(0, 0, -2.5), 2.5), 18);
         assertCountIntersections(camera2, new Sphere(new Point(0, 0, -2), 2d), 10);
         assertCountIntersections(camera2, new Sphere(new Point(0, 0, -1), 4d), 9);
-        assertCountIntersections(camera1, new Sphere(new Point(0, 0, 1), 0.5), 0);
+        assertCountIntersections(camera2, new Sphere(new Point(0, 0, 1), 0.5), 0);
 
     }
 
     @Test
     public void testPlaneIntersections() {
-        assertCountIntersections(camera1, new Plane(new Point(0, 0, -5), new Vector(0, 0, 1)), 9);
-        assertCountIntersections(camera1, new Plane(new Point(0, 0, -5), new Vector(0, 1, 2)), 9);
-        assertCountIntersections(camera1, new Plane(new Point(0, 0, -5), new Vector(0, 1, 1)), 6);
-        assertCountIntersections(camera1, new Plane(new Point(0, 0, -5), new Vector(0, 1, 1)), 6);
+        assertCountIntersections(camera2, new Plane(new Point(0, 0, -5), new Vector(0, 0, 1)), 9);
+        assertCountIntersections(camera2, new Plane(new Point(0, 0, -5), new Vector(0, 1, 2)), 9);
+        assertCountIntersections(camera2, new Plane(new Point(0, 0, -5), new Vector(0, 1, 1)), 6);
+        assertCountIntersections(camera2, new Plane(new Point(0, 0, -5), new Vector(0, 1, 1)), 6);
 
     }
 
     @Test
     public void testTriangleIntersections() {
-        assertCountIntersections(camera1, new Triangular(new Point(1, 1, -2), new Point(-1, 1, -2), new Point(0, -1, -2)), 1);
-        assertCountIntersections(camera1, new Triangular(new Point(1, 1, -2), new Point(1, 1, -2), new Point(0,-20,-2)), 2);
+        assertCountIntersections(camera2, new Triangular(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), 1);
+        assertCountIntersections(camera2, new Triangular(new Point(0, 20, -2), new Point(1, -1, -2), new Point(-1, -1, -2)),2);
 
 
     }
