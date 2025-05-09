@@ -1,25 +1,25 @@
 package primitives;
 
-import java.util.Objects;
+import java.util.List;
 
 import static primitives.Util.isZero;
 
 /**
- * Class representing a ray in 3D space, defined by a starting point (head) and a direction vector.
+ * Represents a ray in 3D space, defined by a starting point and a direction vector.
  */
 public class Ray {
     /**
      * The starting point of the ray.
      */
-    Point head;
+    private final Point head;
 
     /**
      * The normalized direction vector of the ray.
      */
-    Vector direction;
+    private final Vector direction;
 
     /**
-     * Constructor to initialize a ray with a starting point and a direction vector.
+     * Constructs a ray with a starting point and a direction vector.
      * The direction vector is normalized upon initialization.
      *
      * @param p the starting point of the ray
@@ -30,6 +30,61 @@ public class Ray {
         direction = v.normalize();
     }
 
+    /**
+     * Returns the starting point of the ray.
+     *
+     * @return the starting point
+     */
+    public Point getHead() {
+        return head;
+    }
+
+    /**
+     * Returns the normalized direction vector of the ray.
+     *
+     * @return the direction vector
+     */
+    public Vector getDirection() {
+        return direction;
+    }
+
+    /**
+     * Calculates a point on the ray at a given distance from the starting point.
+     *
+     * @param t the distance from the starting point
+     * @return the calculated point
+     */
+    public Point getPoint(double t) {
+        if (isZero(t)) {
+            return head;
+        }
+        return head.add(direction.scale(t));
+    }
+
+    /**
+     * Finds the closest point to the ray's starting point from a list of points.
+     *
+     * @param points the list of points
+     * @return the closest point, or null if the list is empty or null
+     */
+    public Point findClosestPoint(List<Point> points) {
+        if (points == null || points.isEmpty()) {
+            return null;
+        }
+
+        Point closestPoint = null;
+        double minDistance = Double.POSITIVE_INFINITY;
+
+        for (Point p : points) {
+            double distance = p.distance(head);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestPoint = p;
+            }
+        }
+        return closestPoint;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,39 +93,11 @@ public class Ray {
                 && this.direction.equals(other.direction);
     }
 
-
-    /**
-     * Getter for the starting point of the ray.
-     *
-     * @return the starting point of the ray
-     */
-    public Point getHead() {
-        return head;
-    }
-
-    /**
-     * Getter for the direction vector of the ray.
-     *
-     * @return the normalized direction vector of the ray
-     */
-    public Vector getDirection() {
-        return direction;
-    }
-
-    public Point getPoint(double t) {
-        if (isZero(t)) {
-            return head;
-        }
-        return head.add(direction.scale(t));
-    }
-
-
     @Override
     public String toString() {
         return "Ray{" +
-                "p=" + head +
-                ", v=" + direction +
+                "head=" + head +
+                ", direction=" + direction +
                 '}';
     }
-
 }

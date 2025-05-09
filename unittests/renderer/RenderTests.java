@@ -41,8 +41,7 @@ public class RenderTests {
                         // down right
                         new Triangular(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100)));
 
-        camera //
-                .setRayTracer(scene, RayTracerType.SIMPLE) //
+        camera.setRayTracer(scene, RayTracerType.SIMPLE) //
                 .setResolution(1000, 1000) //
                 .build() //
                 .renderImage() //

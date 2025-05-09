@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Simple ray tracer class.
- * Inherits from RayTracerBase and provides basic ray tracing functionality.
+ * Inherits from {@link RayTracerBase} and provides basic ray tracing functionality.
  */
 public class SimpleRayTracer extends RayTracerBase {
 
@@ -30,29 +30,30 @@ public class SimpleRayTracer extends RayTracerBase {
      */
     @Override
     public Color traceRay(Ray ray) {
-        // מחפש נקודות חיתוך בין הקרן לבין הגיאומטריות בסצנה
+        // Find intersections between the ray and the geometries in the scene
         List<Point> intersections = scene.geometries.findIntersections(ray);
 
-        // אם אין חיתוכים - מחזיר את צבע הרקע של הסצנה
+        // If no intersections are found, return the background color of the scene
         if (intersections == null || intersections.isEmpty()) {
             return scene.background;
         }
 
-        // מחפש את הנקודה הקרובה ביותר לתחילת הקרן
+        // Find the closest intersection point to the ray's origin
         Point closestPoint = ray.findClosestPoint(intersections);
 
-        // מחזיר את הצבע של הנקודה הזו
+        // Return the color of the closest point
         return calcColor(closestPoint);
     }
 
     /**
-     * מחשב את צבע הנקודה (בשלב הזה מחזיר רק את האור הסביבתי)
+     * Calculates the color of a given point.
+     * At this stage, it only returns the ambient light intensity.
      *
-     * @param point הנקודה לחשב לה צבע
-     * @return הצבע המחושב
+     * @param point the point to calculate the color for
+     * @return the calculated color
      */
     private Color calcColor(Point point) {
-        // בשלב הזה מחזיר רק את עוצמת התאורה הסביבתית (Ambient Light)
+        // Currently returns only the ambient light intensity
         return scene.ambientLight.getIntensity();
     }
 }

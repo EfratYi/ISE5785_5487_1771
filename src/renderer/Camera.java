@@ -27,6 +27,10 @@ public class Camera implements Cloneable {
     private double distance = 0.0;
     private double width = 0.0;
     private double height = 0.0;
+    private renderer.ImageWriter imageWriter;
+    private renderer.RayTracerBase rayTracer;
+    private int nX = 1;
+    private int nY = 1;
 
     /**
      * Returns a new Builder instance for constructing a Camera object.
@@ -127,6 +131,61 @@ public class Camera implements Cloneable {
     }
 
     /**
+     * Renders the image by casting rays through all pixels.
+     *
+     * @return the Camera instance
+     */
+    public Camera renderImage() {
+        for (int i = 0; i < nY; i++) {
+            for (int j = 0; j < nX; j++) {
+                castRay(j, i);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Prints a grid on the image with a specified interval and color.
+     *
+     * @param interval the interval between grid lines
+     * @param color    the color of the grid lines
+     * @return the Camera instance
+     */
+    public Camera printGrid(int interval, primitives.Color color) {
+        for (int i = 0; i < nY; i++) {
+            for (int j = 0; j < nX; j++) {
+                if (i % interval == 0 || j % interval == 0) {
+                    imageWriter.writePixel(j, i, color);
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Writes the rendered image to a file.
+     *
+     * @param filename the name of the file
+     * @return the Camera instance
+     */
+    public Camera writeToImage(String filename) {
+        imageWriter.writeToImage(filename);
+        return this;
+    }
+
+    /**
+     * Casts a ray through a specific pixel and writes the resulting color to the image.
+     *
+     * @param j the column index of the pixel
+     * @param i the row index of the pixel
+     */
+    private void castRay(int j, int i) {
+        Ray ray = constructRay(nX, nY, j, i);
+        primitives.Color color = rayTracer.traceRay(ray);
+        imageWriter.writePixel(j, i, color);
+    }
+
+    /**
      * Builder class for constructing a Camera object.
      */
     public static class Builder {
@@ -222,11 +281,13 @@ public class Camera implements Cloneable {
         /**
          * Sets the resolution of the view plane.
          *
-         * @param i  the number of horizontal pixels
-         * @param i1 the number of vertical pixels
+         * @param nX the number of horizontal pixels
+         * @param nY the number of vertical pixels
          * @return this Builder instance
          */
-        public Builder setResolution(int i, int i1) {
+        public Builder setResolution(int nX, int nY) {
+            camera.nX = nX;
+            camera.nY = nY;
             return this;
         }
 
@@ -236,11 +297,36 @@ public class Camera implements Cloneable {
          * @return the constructed Camera object
          */
         public Camera build() {
+            if (camera.nX <= 0 || camera.nY <= 0) {
+                throw new IllegalArgumentException("Resolution must be positive");
+            }
+            camera.imageWriter = new renderer.ImageWriter(camera.nX, camera.nY);
+            if (camera.rayTracer == null) {
+                camera.rayTracer = new renderer.SimpleRayTracer(null);
+            }
             try {
                 return (Camera) camera.clone();
             } catch (CloneNotSupportedException e) {
                 return null;
             }
+        }
+
+        /**
+         * Sets the ray tracer for the camera.
+         *
+         * @param scene the scene to be rendered
+         * @param type  the type of ray tracer
+         * @return this Builder instance
+         */
+        public Builder setRayTracer(scene.Scene scene, renderer.RayTracerType type) {
+            switch (type) {
+                case SIMPLE:
+                    camera.rayTracer = new renderer.SimpleRayTracer(scene);
+                    break;
+                default:
+                    camera.rayTracer = null;
+            }
+            return this;
         }
     }
 }
