@@ -63,6 +63,7 @@ public class Ray {
 
     /**
      * Finds the closest point to the ray's starting point from a list of points.
+     * The closest point is determined by the smallest distance to the ray's head.
      *
      * @param points the list of points
      * @return the closest point, or null if the list is empty or null

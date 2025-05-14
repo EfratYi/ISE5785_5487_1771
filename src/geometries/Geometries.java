@@ -3,13 +3,15 @@ package geometries;
 import primitives.Point;
 import primitives.Ray;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
 /**
  * The Geometries class represents a collection of geometric shapes.
- * It allows adding multiple geometries and finding their intersections with a given ray.
+ * It acts as a composite in the Composite design pattern, allowing multiple geometries
+ * to be treated as a single entity. This enables operations like finding intersections
+ * to be performed on the entire collection as if it were a single geometry.
  */
 public class Geometries extends Intersectable {
 
@@ -20,6 +22,7 @@ public class Geometries extends Intersectable {
 
     /**
      * Constructs a Geometries object and initializes it with the given geometries.
+     * This allows creating a composite of multiple geometric shapes.
      *
      * @param geometries the geometries to add to the collection
      */
@@ -29,6 +32,7 @@ public class Geometries extends Intersectable {
 
     /**
      * Adds one or more geometries to the collection.
+     * This method allows dynamically extending the composite with additional shapes.
      *
      * @param geometries the geometries to add
      */
@@ -38,7 +42,8 @@ public class Geometries extends Intersectable {
 
     /**
      * Finds the intersection points of a given ray with all geometries in the collection.
-     * If no intersections are found, returns null.
+     * This method iterates through all the geometries in the composite and collects
+     * their intersection points. If no intersections are found, it returns null.
      *
      * @param ray the ray to intersect with the geometries
      * @return a list of intersection points, or null if there are no intersections

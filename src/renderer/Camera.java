@@ -15,7 +15,8 @@ import static primitives.Util.isZero;
 public class Camera implements Cloneable {
 
     /**
-     * Private constructor to enforce the use of the Builder pattern.
+     * Represents a camera in a 3D scene, responsible for constructing rays through pixels
+     * and rendering the scene. The camera is built using the Builder pattern.
      */
     private Camera() {
     }
