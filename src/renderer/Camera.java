@@ -5,6 +5,7 @@ import primitives.Ray;
 import primitives.Vector;
 
 import java.util.List;
+import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -229,10 +230,11 @@ public class Camera implements Cloneable {
          */
         public Builder setDirection(Point target, Vector vUp) {
             camera.vTo = target.subtract(camera.p0).normalize();
-            camera.vRight = camera.vTo.crossProduct(vUp).normalize();
-            if (!isZero(camera.vTo.dotProduct(camera.vRight)))
+            Vector vRight = camera.vTo.crossProduct(vUp).normalize();
+            // check if vUp and vTo are orthogonal
+            if (!isZero(camera.vTo.dotProduct(vRight)))
                 throw new IllegalArgumentException("vUp and vTo must be orthogonal");
-            camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
+            camera.vUp = vRight.crossProduct(camera.vTo).normalize();
             return this;
         }
 
@@ -301,10 +303,16 @@ public class Camera implements Cloneable {
             if (camera.nX <= 0 || camera.nY <= 0) {
                 throw new IllegalArgumentException("Resolution must be positive");
             }
-            camera.imageWriter = new renderer.ImageWriter(camera.nX, camera.nY);
             if (camera.rayTracer == null) {
                 camera.rayTracer = new renderer.SimpleRayTracer(null);
             }
+            if (camera.width == 0 || camera.height == 0) {
+                throw new MissingResourceException("Width and height must be positive", Camera.class.getName(), "width/height");
+            }
+
+            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            camera.imageWriter = new renderer.ImageWriter(camera.nX, camera.nY);
+
             try {
                 return (Camera) camera.clone();
             } catch (CloneNotSupportedException e) {

@@ -35,11 +35,11 @@ public class RenderTests {
                 .add(// center
                         new Sphere(new Point(0, 0, -100), 50d),
                         // up left
-                        new Triangular(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100)),
+                        new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100)),
                         // down left
-                        new Triangular(new Point(-100, 0, -100), new Point(0, -100, -100), new Point(-100, -100, -100)),
+                        new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100), new Point(-100, -100, -100)),
                         // down right
-                        new Triangular(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100)));
+                        new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100)));
 
         camera.setRayTracer(scene, RayTracerType.SIMPLE) //
                 .setResolution(1000, 1000) //

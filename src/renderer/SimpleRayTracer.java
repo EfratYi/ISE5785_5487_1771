@@ -34,7 +34,7 @@ public class SimpleRayTracer extends RayTracerBase {
         List<Point> intersections = scene.geometries.findIntersections(ray);
 
         // If no intersections are found, return the background color of the scene
-        if (intersections == null || intersections.isEmpty()) {
+        if (intersections == null) {
             return scene.background;
         }
 

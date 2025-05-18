@@ -6,6 +6,12 @@ import primitives.Color;
 
 /**
  * Represents a 3D scene containing geometries, lighting, and background settings.
+ * This class provides methods to set the background color, ambient light, and geometries of the scene.
+ * It is used in rendering processes to define the visual properties of the scene.
+ *
+ * The Scene class is part of a larger rendering framework and is designed to be used in conjunction with other classes
+ * such as RayTracerBase and Intersectable.
+ *
  */
 public class Scene {
     /**

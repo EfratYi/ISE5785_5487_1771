@@ -5,7 +5,6 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -68,7 +67,7 @@ class GeometriesTests {
         Geometries geometries4 = new Geometries(
                 new Sphere(new Point(0, 0, 5), 1), // 2 intersection points
                 new Plane(new Point(0, 0, 4), new Vector(0, 0, 1)), // 1 intersection point
-                new Triangular(                      // 1 intersection point
+                new Triangle(                      // 1 intersection point
                         new Point(-1, 1, 6),
                         new Point(1, 1, 6),
                         new Point(0, -1, 6)
