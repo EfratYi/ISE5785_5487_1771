@@ -42,18 +42,16 @@ public class SimpleRayTracer extends RayTracerBase {
         Point closestPoint = ray.findClosestPoint(intersections);
 
         // Return the color of the closest point
-        return calcColor(closestPoint);
+        return calcColor( intersections.stream()
+                .filter(intersection -> intersection.point.equals(closestPoint))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No intersection found for the closest point")));
     }
 
-    /**
-     * Calculates the color of a given point.
-     * At this stage, it only returns the ambient light intensity.
-     *
-     * @param point the point to calculate the color for
-     * @return the calculated color
-     */
-    private Color calcColor(Point point) {
-        // Currently returns only the ambient light intensity
-        return scene.ambientLight.getIntensity();
+
+    private Color calcColor(Intersection intersection) {
+        // Calculate the color at the intersection point
+        // This is a placeholder implementation and should be replaced with actual shading logic
+        return scene.background.add(intersection.geometry.getEmission());
     }
 }

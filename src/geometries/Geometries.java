@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+
 /**
  * The Geometries class represents a collection of geometric shapes.
  * It acts as a composite in the Composite design pattern, allowing multiple geometries
@@ -48,19 +49,20 @@ public class Geometries extends Intersectable {
      * @param ray the ray to intersect with the geometries
      * @return a list of intersection points, or null if there are no intersections
      */
-    @Override
     public List<Intersection> calculateIntersectionsHelper(Ray ray) {
         if (shapes.isEmpty()) {
             return null;
         }
-        List<Point> intersections = null;  // Initialize as null
+        List<Intersection> intersections = null;  // Initialize as null
         for (Intersectable shape : shapes) {
             List<Point> shapeIntersections = shape.findIntersections(ray);
             if (shapeIntersections != null) {
                 if (intersections == null) {
                     intersections = new LinkedList<>();  // Initialize only if there are intersections
                 }
-                intersections.addAll(shapeIntersections);
+                intersections.addAll(shapeIntersections.stream()
+                        .map(point -> new Intersection((Geometry) shape, point))
+                        .toList());
             }
         }
         return intersections;  // Return null if no intersections

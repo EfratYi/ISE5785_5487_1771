@@ -102,6 +102,6 @@ public class Plane extends Geometry {
 
         // Calculate the intersection point
         Point intersectionPoint = ray.getHead().add(ray.getDirection().scale(t));
-        return List.of(intersectionPoint);
+        return List.of(new Intersection(this, intersectionPoint));
     }
 }

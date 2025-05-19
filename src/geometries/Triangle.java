@@ -57,7 +57,7 @@ public class Triangle extends Polygon {
      * or null if there are no intersections.
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<Intersection> calculateIntersectionsHelper(Ray ray) {
         Point p0 = ray.getHead();
         Vector dir = ray.getDirection();
 
@@ -90,6 +90,6 @@ public class Triangle extends Polygon {
             return null;
         }
 
-        return List.of(ray.getPoint(t));
+        return List.of(new Intersection(this, ray.getPoint(t)));
     }
 }
