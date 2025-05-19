@@ -41,8 +41,7 @@ public abstract class Intersectable {
     }
 
     public final List<Intersection> calculateIntersections(Ray ray){
-        calculateIntersectionsHelper(ray);
-        return null;
+        return calculateIntersectionsHelper(ray);
     }
     /**
      * Finds the intersection points of a given ray with the geometry.

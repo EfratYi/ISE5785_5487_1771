@@ -33,7 +33,7 @@ public class SimpleRayTracer extends RayTracerBase {
     public Color traceRay(Ray ray) {
         // Find intersections between the ray and the geometries in the scene
 
-        List<Intersection> intersections = scene.geometries.calculateIntersectionsHelper(ray);
+        List<Intersection> intersections = scene.geometries.calculateIntersections(ray);
 
         // If no intersections are found, return the background color of the scene
         if (intersections == null) {
@@ -57,6 +57,6 @@ public class SimpleRayTracer extends RayTracerBase {
     private Color calcColor(Intersection intersection) {
         // Calculate the color at the intersection point
         // This is a placeholder implementation and should be replaced with actual shading logic
-        return scene.background.add(intersection.geometry.getEmission());
+        return intersection.geometry.getEmission();
     }
 }
