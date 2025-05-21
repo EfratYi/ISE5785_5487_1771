@@ -1,5 +1,6 @@
 package geometries;
 
+import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
@@ -8,6 +9,16 @@ import primitives.Vector;
  * Provides a method to calculate the normal vector at a given point on the geometry.
  */
 public abstract class Geometry extends Intersectable {
+    protected Color emission = Color.BLACK;
+
+    public Color getEmission() {
+        return emission;
+    }
+
+    public Geometry setEmission(Color emission) {
+        this.emission = emission;
+        return this;
+    }
 
     /**
      * Calculates the normal vector to the geometry at the specified point.
