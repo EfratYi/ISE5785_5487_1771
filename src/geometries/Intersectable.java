@@ -10,6 +10,15 @@ import java.util.List;
  * This class provides a method to find intersection points of a ray with the geometry.
  */
 public abstract class Intersectable {
+    public final List<Point> findIntersections(Ray ray) {
+        var list = calculateIntersections(ray);
+        return list == null ? null : list.stream().map(intersection -> intersection.point).toList();
+    }
+    protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray) ;
+    public final List<Intersection> calculateIntersections(Ray ray) {
+        return calculateIntersectionsHelper(ray);
+    }
+
     public static class Intersection {
 
         public final Geometry geometry;
@@ -34,7 +43,6 @@ public abstract class Intersectable {
             return geometry.equals(that.geometry) && point.equals(that.point);
         }
     }
-    protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray) ;
 
 
 

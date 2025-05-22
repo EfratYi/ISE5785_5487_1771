@@ -86,7 +86,7 @@ public class Plane extends Geometry {
     public List<Intersection> calculateIntersectionsHelper(Ray ray) {
         // Check if the ray is parallel to the plane
         double denominator = normal.dotProduct(ray.getDirection());
-        if (denominator == 0) {
+        if (alignZero(denominator) == 0) {
             return null; // The ray is parallel to the plane
         }
         if (q.equals(ray.getHead())) {
