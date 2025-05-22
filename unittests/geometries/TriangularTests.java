@@ -10,13 +10,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link geometries.Triangular} class.
+ * Unit tests for the {@link geometries.Triangle} class.
  */
-class TriangularTests {
+class TriangleTests {
 
     /**
-     * Test method for {@link geometries.Triangular#getNormal(primitives.Point)}.
-     * This test checks the getNormal method of the Triangular class.
+     * Test method for {@link geometries.Triangle#getNormal(primitives.Point)}.
+     * This test checks the getNormal method of the Triangle class.
      * It verifies that the normal vector is calculated correctly for a given point on the triangle.
      */
     @Test
@@ -25,7 +25,7 @@ class TriangularTests {
         Point a = new Point(0, 0, 0);
         Point b = new Point(1, 0, 0);
         Point c = new Point(0, 1, 0);
-        Triangular triangle = new Triangular(a, b, c);
+        Triangle triangle = new Triangle(a, b, c);
 
         // Act
         Vector normal = triangle.getNormal(a);
@@ -35,8 +35,8 @@ class TriangularTests {
     }
 
     /**
-     * Test method for {@link geometries.Triangular#findIntersections(primitives.Ray)}.
-     * This test checks the findIntersections method of the Triangular class.
+     * Test method for {@link geometries.Triangle#findIntersections(primitives.Ray)}.
+     * This test checks the findIntersections method of the Triangle class.
      * It verifies the behavior of the method for rays that:
      * 1. Intersect inside the triangle.
      * 2. Miss the triangle (outside against edge or vertex).
@@ -45,7 +45,7 @@ class TriangularTests {
     @Test
     void testFindIntersections() {
         // Arrange
-        Triangular triangle = new Triangular(
+        Triangle triangle = new Triangle(
                 new Point(0, 0, 0),
                 new Point(1, 0, 0),
                 new Point(0, 1, 0)

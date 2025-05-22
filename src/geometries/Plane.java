@@ -7,14 +7,17 @@ import primitives.Vector;
 import java.util.List;
 
 import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
 
 /**
- * This class represents a Plane in 3D space, defined by a point and a normal vector.
- * It extends the Geometry class and provides methods to calculate the normal vector
+ * Represents a Plane in 3D space, defined by a point and a normal vector.
+ * <p>
+ * A plane is a flat, two-dimensional surface that extends infinitely in 3D space.
+ * This class extends {@link Geometry} and provides methods to calculate the normal vector
  * and find intersections with a given ray.
+ * </p>
  */
 public class Plane extends Geometry {
+
     /**
      * A point on the plane.
      */
@@ -26,8 +29,8 @@ public class Plane extends Geometry {
     protected final Vector normal;
 
     /**
-     * Constructor to initialize a Plane object with three points.
-     * The three points must not be collinear.
+     * Constructs a Plane object using three points in 3D space.
+     * The three points must not be collinear, as they define the plane uniquely.
      *
      * @param p1 the first point defining the plane
      * @param p2 the second point defining the plane
@@ -43,9 +46,9 @@ public class Plane extends Geometry {
     }
 
     /**
-     * Constructor to initialize a Plane object with a point and a normal vector.
+     * Constructs a Plane object using a point and a normal vector.
      *
-     * @param q      the point on the plane
+     * @param q      a point on the plane
      * @param normal the normal vector of the plane
      */
     public Plane(Point q, Vector normal) {
@@ -55,7 +58,9 @@ public class Plane extends Geometry {
 
     /**
      * Returns the normal vector to the plane.
+     * <p>
      * The normal vector is constant for all points on the plane.
+     * </p>
      *
      * @param unused a point on the plane (not used in this implementation)
      * @return the normal vector of the plane
@@ -67,14 +72,18 @@ public class Plane extends Geometry {
 
     /**
      * Finds the intersection points of a given ray with the plane.
+     * <p>
      * If the ray is parallel to the plane or starts on the plane, there are no intersections.
+     * Otherwise, the method calculates the intersection point using the parametric equation
+     * of the ray and the plane equation.
+     * </p>
      *
      * @param ray the ray to intersect with the plane
-     * @return a list of intersection points if the ray intersects the plane,
+     * @return a list containing the intersection point if the ray intersects the plane,
      * or null if there are no intersections
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<Intersection> calculateIntersectionsHelper(Ray ray) {
         // Check if the ray is parallel to the plane
         double denominator = normal.dotProduct(ray.getDirection());
         if (denominator == 0) {
@@ -93,6 +102,6 @@ public class Plane extends Geometry {
 
         // Calculate the intersection point
         Point intersectionPoint = ray.getHead().add(ray.getDirection().scale(t));
-        return List.of(intersectionPoint);
+        return List.of(new Intersection(this, intersectionPoint));
     }
 }

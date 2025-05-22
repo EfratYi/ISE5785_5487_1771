@@ -9,6 +9,7 @@ public abstract class RadialGeometry extends Geometry {
      * The radius of the radial geometry.
      */
     final double radius;
+    protected  final double radiusSquared;
 
     /**
      * Constructor to initialize a radial geometry with a given radius.
@@ -17,5 +18,6 @@ public abstract class RadialGeometry extends Geometry {
      */
     public RadialGeometry(double radius) {
         this.radius = radius;
+        this.radiusSquared=radius*radius;
     }
 }

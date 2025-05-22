@@ -1,8 +1,12 @@
 package primitives;
 
+import geometries.Intersectable;
+
 import java.util.List;
 
 import static primitives.Util.isZero;
+
+import geometries.Intersectable.Intersection;
 
 /**
  * Represents a ray in 3D space, defined by a starting point and a direction vector.
@@ -63,34 +67,38 @@ public class Ray {
 
     /**
      * Finds the closest point to the ray's starting point from a list of points.
+     * The closest point is determined by the smallest distance to the ray's head.
      *
      * @param points the list of points
      * @return the closest point, or null if the list is empty or null
      */
     public Point findClosestPoint(List<Point> points) {
-        if (points == null || points.isEmpty()) {
+        return points == null ? null
+                : findClosestIntersection(points.stream().map(p -> new Intersection(null, p)).toList()).point;
+    }
+
+    public Intersection findClosestIntersection(List<Intersection> intersections) {
+        if (intersections == null) {
             return null;
         }
-
-        Point closestPoint = null;
+        Intersection closestIntersection = null;
         double minDistance = Double.POSITIVE_INFINITY;
-
-        for (Point p : points) {
+        for (Intersection intersection : intersections) {
+            Point p = intersection.point;
             double distance = p.distance(head);
             if (distance < minDistance) {
                 minDistance = distance;
-                closestPoint = p;
+                closestIntersection = intersection;
             }
         }
-        return closestPoint;
+        return closestIntersection;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        return (o instanceof Ray other)
-                && this.head.equals(other.head)
-                && this.direction.equals(other.direction);
+        if(! (o instanceof Ray other)) return  false;
+        return head.equals(other.head)   && direction.equals(other.direction);
     }
 
     @Override

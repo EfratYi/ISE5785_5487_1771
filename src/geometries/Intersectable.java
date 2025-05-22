@@ -36,14 +36,8 @@ public abstract class Intersectable {
     }
     protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray) ;
 
-    public final  List <Intersection> calculateIntersections(Ray ray) {
-        calculateIntersectionsHelper(ray);
-        return List.of();
-    }
-    public final List<Point> findIntersections(Ray ray) {
-        var list = calculateIntersections(ray);
-        return list == null ? null : list.stream().map(intersection -> intersection.point).toList();
-    }
+
+
 }
 
     /**

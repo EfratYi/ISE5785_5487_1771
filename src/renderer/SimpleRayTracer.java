@@ -1,11 +1,14 @@
 package renderer;
 
+import geometries.Geometries;
+import geometries.Intersectable;
 import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import scene.Scene;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Simple ray tracer class.
@@ -33,27 +36,27 @@ public class SimpleRayTracer extends RayTracerBase {
         // Find intersections between the ray and the geometries in the scene
         List<Point> intersections = scene.geometries.findIntersections(ray);
 
-        // If no intersections are found, return the background color of the scene
-        if (intersections == null || intersections.isEmpty()) {
-            return scene.background;
+        // Check if the scene has geometries
+        if (Objects.equals(scene.geometries, new Geometries())) {
+            return scene.background; // Return background color if no geometries
         }
+        // Check if the ray intersects with any geometries in the scene
+        if (scene.geometries.calculateIntersections(ray) == null) {
+            return scene.background; // Return background color if no intersection
+        }
+        Intersectable.Intersection closestIntersection = ray.findClosestIntersection(scene.geometries.calculateIntersections(ray));
 
-        // Find the closest intersection point to the ray's origin
-        Point closestPoint = ray.findClosestPoint(intersections);
-
-        // Return the color of the closest point
-        return calcColor(closestPoint);
+        if (closestIntersection == null) {
+            return scene.background; // Return background color if no intersection
+        }
+        // Calculate the color at the intersection point
+        return calcColor(closestIntersection);
     }
 
-    /**
-     * Calculates the color of a given point.
-     * At this stage, it only returns the ambient light intensity.
-     *
-     * @param point the point to calculate the color for
-     * @return the calculated color
-     */
-    private Color calcColor(Point point) {
+
+    private Color calcColor(Intersectable.Intersection intersection) {
         // Currently returns only the ambient light intensity
-        return scene.ambientLight.getIntensity();
+        return scene.ambientLight.getIntensity().add(intersection.geometry.getEmission());
+
     }
 }

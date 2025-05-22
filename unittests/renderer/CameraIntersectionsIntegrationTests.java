@@ -3,7 +3,7 @@ package renderer;
 import geometries.Intersectable;
 import geometries.Plane;
 import geometries.Sphere;
-import geometries.Triangular;
+import geometries.Triangle;
 import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Ray;
@@ -77,12 +77,12 @@ class CameraIntersectionsIntegrationTests {
     }
 
     /**
-     * Test method for intersections between rays from the camera and a {@link Triangular}.
-     * Verifies the number of intersections for various triangular configurations.
+     * Test method for intersections between rays from the camera and a {@link Triangle}.
+     * Verifies the number of intersections for various Triangle configurations.
      */
     @Test
     public void testTriangleIntersections() {
-        assertCountIntersections(camera2, new Triangular(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), 1);
-        assertCountIntersections(camera2, new Triangular(new Point(0, 20, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), 2);
+        assertCountIntersections(camera2, new Triangle(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), 1);
+        assertCountIntersections(camera2, new Triangle(new Point(0, 20, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), 2);
     }
 }

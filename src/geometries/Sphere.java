@@ -52,42 +52,41 @@ public class Sphere extends RadialGeometry {
      * or null if there are no intersections.
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         Point p0 = ray.getHead();
         Vector v = ray.getDirection();
 
         if (p0.equals(center)) {
-            return List.of(ray.getPoint(radius)); // Ray starts at the center of the sphere
+            // Ray starts at the center of the sphere
+            return List.of(new Intersection(this, ray.getPoint(radius)));
         }
 
         Vector u = center.subtract(p0);
         double tm = alignZero(u.dotProduct(v));
         double dSquared = alignZero(u.lengthSquared() - tm * tm);
-        double radiusSquared = radius * radius;
 
         if (alignZero(dSquared - radiusSquared) >= 0) {
             return null; // No intersections
         }
 
-
         double th = Math.sqrt(radiusSquared - dSquared);
         double t1 = alignZero(tm - th);
         double t2 = alignZero(tm + th);
 
-        // If both t1 and t2 are negative, the intersection points are behind the ray's origin
-        if (t1 <= 0 && t2 <= 0) {
-            return null;
-        }
-
-        // If both t1 and t2 are positive, there are two intersection points
         if (t1 > 0 && t2 > 0) {
-            Point p1 = p0.add(v.scale(t1));
-            Point p2 = p0.add(v.scale(t2));
-            return List.of(p1, p2);
+            // Both intersection points are in front of the ray's origin
+            return List.of(new Intersection(this, ray.getPoint(t1)), (new Intersection(this, ray.getPoint(t2))));
+        }
+        if (t1 > 0) {
+            // Only the first intersection point is valid
+            return List.of(new Intersection(this, ray.getPoint(t1)));
+        }
+        if (t2 > 0) {
+            // Only the second intersection point is valid
+            return List.of(new Intersection(this, ray.getPoint(t2)));
         }
 
-        // If one of t1 or t2 is negative, return the positive intersection point
-        double t = t1 > 0 ? t1 : t2;
-        return List.of(p0.add(v.scale(t)));
+        // No valid intersection points
+        return null;
     }
 }
