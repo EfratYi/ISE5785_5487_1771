@@ -74,6 +74,38 @@ public class RenderTests {
               .writeToImage("color render test");
    }
 
+   @Test
+   public void newRenderTest() {
+      Scene scene = new Scene("Multi color").setAmbientLight(new AmbientLight(new Color(WHITE)));
+      scene.geometries
+              .add(
+                      // center
+                      new Sphere(new Point(0, 0, -100), 50d)
+                              .setMaterial(new Material().setKA(new Double3(0.4))),
+
+                      // up left (ירוק)
+                      new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100))
+                              .setMaterial(new Material().setKA(new Double3(0, 0.8, 0))),
+
+                      // down left (אדום)
+                      new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100), new Point(-100, -100, -100))
+                              .setMaterial(new Material().setKA(new Double3(0.8, 0, 0))),
+
+                      // down right (כחול)
+                      new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100))
+                              .setMaterial(new Material().setKA(new Double3(0, 0, 0.8)))
+              );
+
+      camera
+              .setRayTracer(scene, RayTracerType.SIMPLE)
+              .setResolution(1000, 1000)
+              .build()
+              .renderImage()
+              .printGrid(100, new Color(WHITE))
+              .writeToImage("new color render test");
+   }
+
+
    /** Test for XML based scene - for bonus */
    @Test
    public void basicRenderXml() {

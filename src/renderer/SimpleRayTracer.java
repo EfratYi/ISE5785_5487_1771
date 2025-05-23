@@ -10,6 +10,8 @@ import scene.Scene;
 import java.util.List;
 import java.util.Objects;
 
+
+
 /**
  * Simple ray tracer class.
  * Inherits from {@link RayTracerBase} and provides basic ray tracing functionality.
@@ -55,9 +57,7 @@ public class SimpleRayTracer extends RayTracerBase {
 
 
     private Color calcColor(Intersectable.Intersection intersection) {
-        // Currently returns only the ambient light intensity
-        return scene.ambientLight.getIntensity().add(intersection.geometry.getEmission());
-
-    }
+        return scene
+                .ambientLight.getIntensity().scale(intersection.geometry.getMaterial().kA).add(intersection.geometry.getEmission());    }
 
 }
