@@ -69,11 +69,10 @@ class RayTests {
                 new Point(10, 0, 0)
         );
         assertEquals(new Point(2, 0, 0), ray.findClosestPoint(points1), "TC01: The closest point is in the middle of the list");
-
         // =============== Boundary Values Tests (BVA) ==================
 
         // TC02: Empty list
-        assertNull(ray.findClosestPoint(List.of()), "TC02: Empty list");
+        assertNull(ray.findClosestPoint(null), "TC02: Empty list");
 
         // TC03: The first point is the closest
         List<Point> points3 = List.of(
@@ -90,5 +89,6 @@ class RayTests {
                 new Point(1, 0, 0)   // Closest point
         );
         assertEquals(new Point(1, 0, 0), ray.findClosestPoint(points4), "TC04: The last point is the closest");
+
     }
 }

@@ -34,6 +34,13 @@ public class Point {
         this(new Double3(x, y, z));
     }
 
+    /**
+     * Compares this point to another object for equality.
+     * Returns true if the other object is a Point with the same coordinates.
+     *
+     * @param obj the object to compare
+     * @return true if the objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -41,11 +48,21 @@ public class Point {
         return xyz.equals(other.xyz);
     }
 
+    /**
+     * Returns a hash code value for the point.
+     *
+     * @return the hash code
+     */
     @Override
     public int hashCode() {
         return xyz.hashCode();
     }
 
+    /**
+     * Returns a string representation of the point.
+     *
+     * @return the string representation
+     */
     @Override
     public String toString() {
         return "" + xyz;

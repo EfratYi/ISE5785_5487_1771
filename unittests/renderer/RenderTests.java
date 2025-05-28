@@ -48,7 +48,11 @@ public class RenderTests {
               .printGrid(100, new Color(YELLOW)) //
               .writeToImage("Two color render test");
    }
-
+   // For stage 6 - please disregard in stage 5
+   /**
+    * Produce a scene with basic 3D model - including individual lights of the
+    * bodies and render it into a png image with a grid
+    */
    @Test
    void renderMultiColorTest() {
       Scene scene = new Scene("Multi color").setAmbientLight(new AmbientLight(new Color(51, 51, 51)));
@@ -73,7 +77,12 @@ public class RenderTests {
               .printGrid(100, new Color(WHITE)) //
               .writeToImage("color render test");
    }
-
+   /**
+    * Produce a scene with multiple geometries, each having softer ambient reflection coefficients,
+    * and render it into a png image with a grid.
+    * The scene includes a sphere and three triangles with distinct colors (green, red, and blue).
+    * The rendered image is saved with a grid overlay.
+    */
    @Test
    public void newRenderTest() {
       Scene scene = new Scene("Multi color").setAmbientLight(new AmbientLight(new Color(WHITE)));

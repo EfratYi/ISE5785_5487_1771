@@ -5,7 +5,6 @@ import geometries.Intersectable;
 import java.util.List;
 
 import static primitives.Util.isZero;
-
 import geometries.Intersectable.Intersection;
 
 /**
@@ -68,6 +67,7 @@ public class Ray {
     /**
      * Finds the closest point to the ray's starting point from a list of points.
      * The closest point is determined by the smallest distance to the ray's head.
+     * Returns null if the list is null or empty.
      *
      * @param points the list of points
      * @return the closest point, or null if the list is empty or null
@@ -77,30 +77,50 @@ public class Ray {
                 : findClosestIntersection(points.stream().map(p -> new Intersection(null, p)).toList()).point;
     }
 
+    /**
+     * Finds the closest intersection to the ray's starting point from a list of intersections.
+     * The closest intersection is determined by the smallest distance to the ray's head.
+     *
+     * @param intersections the list of intersections
+     * @return the closest intersection, or null if the list is null
+     */
     public Intersection findClosestIntersection(List<Intersection> intersections) {
         if (intersections == null) {
             return null;
         }
-        Intersection closestIntersection = null;
+        Point closestPoint = null;
         double minDistance = Double.POSITIVE_INFINITY;
         for (Intersection intersection : intersections) {
             Point p = intersection.point;
             double distance = p.distance(head);
             if (distance < minDistance) {
                 minDistance = distance;
-                closestIntersection = intersection;
+                closestPoint = p;
             }
         }
-        return closestIntersection;
+        return new Intersection(intersections.get(0).geometry, closestPoint);
     }
 
+    /**
+     * Checks if this ray is equal to another object.
+     * Two rays are considered equal if they have the same starting point and direction vector.
+     *
+     * @param o the object to compare with
+     * @return true if the object is a Ray with the same head and direction, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if(! (o instanceof Ray other)) return  false;
-        return head.equals(other.head)   && direction.equals(other.direction);
+        return (o instanceof Ray other)
+                && this.head.equals(other.head)
+                && this.direction.equals(other.direction);
     }
 
+    /**
+     * Returns a string representation of the ray.
+     *
+     * @return a string containing the head and direction of the ray
+     */
     @Override
     public String toString() {
         return "Ray{" +
