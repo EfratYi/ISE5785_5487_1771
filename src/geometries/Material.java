@@ -8,6 +8,12 @@ import primitives.Double3;
  * as well as shininess factor for specular highlights.
  */
 public class Material {
+
+
+    public Double3 kT = Double3.ZERO;
+
+
+    public Double3 kR = Double3.ZERO;
     /**
      * Ambient reflection coefficient (kA), default is (1,1,1).
      */
