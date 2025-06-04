@@ -22,6 +22,9 @@ import java.util.Objects;
  */
 public class SimpleRayTracer extends RayTracerBase {
 
+
+    private static final double DELTA = 0.1;
+
     /**
      * Constructor to initialize the simple ray tracer with a given scene.
      *
@@ -43,6 +46,10 @@ public class SimpleRayTracer extends RayTracerBase {
             if (!setLightSource(intersection, lightSource)) {
                 continue;
             }
+            if (!unshaded(intersection)) {
+                continue;
+            }
+
             Color iL = lightSource.getIntensity(intersection.point);
             Double3 diff = calcDiffusive(intersection);
             Double3 spec = calcSpecular(intersection);
