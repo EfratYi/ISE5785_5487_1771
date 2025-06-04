@@ -183,4 +183,30 @@ public class SimpleRayTracer extends RayTracerBase {
         // Check: both dot products should have the same sign (i.e., their product should be positive)
         return intersection.dotProductRayNormal * intersection.dotProductLightNormal > 0;
     }
+
+
+    private boolean unshaded(Intersectable.Intersection intersection) {
+        Vector l = intersection.lightDirection;
+        Vector n = intersection.normalAtPoint;
+        double nl = intersection.dotProductLightNormal;
+        LightSource lightSource = intersection.lightSource;
+
+        Vector epsVector = n.scale(nl < 0 ? DELTA : -DELTA);
+        Point movedPoint = intersection.point.add(epsVector);
+        Ray shadowRay = new Ray(movedPoint, l.scale(-1));
+
+        List<Intersectable.Intersection> shadowIntersections = scene.geometries.calculateIntersections(shadowRay);
+        if (shadowIntersections == null) return true;
+
+        double lightDistance = lightSource.getDistance(intersection.point);
+
+        for (Intersectable.Intersection shadowIntersection : shadowIntersections) {
+            if (shadowIntersection.point.distance(movedPoint) < lightDistance) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }
