@@ -109,9 +109,9 @@ class ShadowTests {
                  .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(30)) //
          );
       scene.setAmbientLight(new AmbientLight(new Color(38, 38, 38)));
-//      scene.lights //
-//         .add(new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4)) //
-//            .setKl(4E-4).setKq(2E-5));
+      scene.lights //
+         .add(new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4)) //
+            .setKl(4E-4).setKq(2E-5));
 
       camera//
          .setResolution(600, 600) //

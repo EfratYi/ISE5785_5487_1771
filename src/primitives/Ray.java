@@ -88,17 +88,19 @@ public class Ray {
         if (intersections == null) {
             return null;
         }
-        Point closestPoint = null;
+
+        Intersection closest = null;
         double minDistance = Double.POSITIVE_INFINITY;
+
         for (Intersection intersection : intersections) {
-            Point p = intersection.point;
-            double distance = p.distance(head);
+            double distance = intersection.point.distance(head);
             if (distance < minDistance) {
                 minDistance = distance;
-                closestPoint = p;
+                closest = intersection;
             }
         }
-        return new Intersection(intersections.get(0).geometry, closestPoint);
+
+        return closest;
     }
 
     /**
