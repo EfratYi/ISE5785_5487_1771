@@ -222,6 +222,18 @@ public class SimpleRayTracer extends RayTracerBase {
             return scene.background;
         }
 
+        // חישוב צבע רקורסיבי בנקודת החיתוך עם הנחתה חדשה
+        return calcColor(intersection, ray, level - 1, kkx).scale(kx);
+    }
+
+    private Color calcGlobalEffects(Intersectable.Intersection intersection, int level, Double3 k) {
+
+        Material material = intersection.geometry.getMaterial();
+        return calcGlobalEffect(constructRefractedRay(intersection), material.kT, level, k)
+                .add(calcGlobalEffect(constructReflectedRay(intersection), material.kR, level, k);
+
+    }
+
     /**
      * Performs preprocessing on the intersection:
      * Initializes the ray direction, normal at the hit point, and their dot product.

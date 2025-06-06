@@ -44,6 +44,14 @@ public class Material {
         this.kA = kA;
         return this;
     }
+    public Material setkT(Double3 kT) {
+        this.kT = kT;
+        return this;
+    }
+    public Material setkR(Double3 kR) {
+        this.kR = kR;
+        return this;
+    }
 
     /**
      * Sets the ambient reflection coefficient with a single double value for all components.
