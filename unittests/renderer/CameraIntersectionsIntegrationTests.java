@@ -1,6 +1,6 @@
 package renderer;
-
 import geometries.Intersectable;
+
 import geometries.Plane;
 import geometries.Sphere;
 import geometries.Triangle;

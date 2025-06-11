@@ -1,7 +1,5 @@
 package primitives;
 
-import geometries.Intersectable;
-
 import java.util.List;
 
 import static primitives.Util.alignZero;
@@ -98,17 +96,17 @@ public class Ray {
         if (intersections == null) {
             return null;
         }
-        Point closestPoint = null;
+        Intersection closest = null;
         double minDistance = Double.POSITIVE_INFINITY;
         for (Intersection intersection : intersections) {
             Point p = intersection.point;
-            double distance = p.distance(head);
+            double distance = p.distanceSquared(head);
             if (distance < minDistance) {
+                closest = intersection;
                 minDistance = distance;
-                closestPoint = p;
             }
         }
-        return new Intersection(intersections.get(0).geometry, closestPoint);
+        return closest;
     }
 
     /**
