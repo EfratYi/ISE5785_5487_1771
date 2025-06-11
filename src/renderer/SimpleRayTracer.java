@@ -40,40 +40,6 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
     /**
-     * Calculates the local lighting effects (diffuse and specular) at the intersection point.
-     *
-     * @param intersection the intersection point
-     * @return the color resulting from the local lighting effects
-     */
-    private Color calcColorLocalEffects(Intersectable.Intersection intersection) {
-        Color color = intersection.geometry.getEmission();
-        for (LightSource lightSource : scene.lights) {
-            if (!setLightSource(intersection, lightSource)) {
-                continue;
-            }
-            if (!unshaded(intersection)) {
-                continue;
-            }
-
-            Color iL = lightSource.getIntensity(intersection.point);
-            Double3 diff = calcDiffusive(intersection);
-            Double3 spec = calcSpecular(intersection);
-            color = color.add(iL.scale(diff.add(spec)));
-        }
-        return color;
-    }
-
-    private Color calcColor(Intersectable.Intersection intersection, Ray ray, int level, Double3 k) {
-        Vector n = intersection.geometry.getNormal(intersection.point);
-        Vector v = ray.getDirection ();
-        double nv = alignZero(n.dotProduct(v));
-        if (nv == 0) return Color.BLACK;
-        Color color = scene.ambientLight.getIntensity()
-                .add(calcColorLocalEffects(intersection));
-        return 1 == level ? color : color.add(calcGlobalEffects(intersection, level, k));
-    }
-
-    /**
      * Calculates the specular reflection component based on the Phong reflection model.
      *
      * @param intersection the intersection data
@@ -93,18 +59,6 @@ public class SimpleRayTracer extends RayTracerBase {
 
         return intersection.material.kS.scale(Math.pow(minusVR, intersection.material.sh));
     }
-
-    private Ray constructReflectedRay(Intersectable.Intersection intersection) {
-        Vector reflectedDir = incoming.subtract(normal.scale(2 * incoming.dotProduct(normal))).normalize();
-        Vector delta = normal.scale(incoming.dotProduct(normal) > 0 ? DELTA : -DELTA);
-        return new Ray(point.add(delta), reflectedDir);
-    }
-
-    private Ray constructRefractedRay(Intersectable.Intersection intersection) {
-        Vector delta = normal.scale(incoming.dotProduct(normal) > 0 ? DELTA : -DELTA);
-        return new Ray(point.add(delta), incoming);  // אותו כיוון, מניחים שקיפות ישרה
-    }
-
     /**
      * Calculates the diffuse reflection component based on the Lambertian model.
      *
@@ -115,32 +69,6 @@ public class SimpleRayTracer extends RayTracerBase {
         double nl = intersection.dotProductLightNormal;
         double nlAbs = Math.abs(alignZero(nl));
         return intersection.material.kD.scale(nlAbs);
-    }
-    private Color calcLocalEffects(Intersectable.Intersection intersection) {
-        Color color = intersection.geometry.getEmission();
-
-        for (LightSource lightSource : scene.lights) {
-            if (!setLightSource(intersection, lightSource)) {
-                continue;
-            }
-
-            // תנאי הצללה: אם הנקודה בצל (עצם מסתיר), לא מוסיפים אור זה
-            if (!unshaded(intersection)) {
-                continue;
-            }
-
-            // חישוב עוצמת אור בנקודה
-            Color iL = lightSource.getIntensity(intersection.point);
-
-            // חישוב תרומת אור ישיר (דיפוזי + ספקולרי)
-            Double3 diff = calcDiffusive(intersection);
-            Double3 spec = calcSpecular(intersection);
-
-            // הוספה לצבע הכולל
-            color = color.add(iL.scale(diff.add(spec)));
-        }
-
-        return color;
     }
 
 
@@ -195,69 +123,6 @@ public class SimpleRayTracer extends RayTracerBase {
 
 
     /**
-     * Calculates the final color at the intersection point, including ambient and local lighting.
-     *
-     * @param intersection the intersection data
-     * @param ray the ray that hit the geometry
-     * @return the resulting color at the intersection point
-     */
-    private Color calcColor(Intersectable.Intersection intersection, Ray ray) {
-        return calcColor(intersection, ray, MAX_CALC_COLOR_LEVEL, INITIAL_K)
-                .add(scene.ambientLight.getIntensity());
-    }
-    private Color calcGlobalEffect(Ray ray, Double3 kx, int level, Double3 k) {
-        // מכפלה של מקדמי ההנחתה: מה שהיה עד עכשיו כפול השקיפות/השתקפות של הקרן הנוכחית
-        Double3 kkx = kx.product(k);
-
-        // אם ההנחתה הכוללת נמוכה מהרף – אין טעם להמשיך לחשב, נחזיר שחור
-        if (kkx.lowerThan(MIN_CALC_COLOR_K)) {
-            return Color.BLACK;
-        }
-
-        // מציאת נקודת החיתוך הקרובה ביותר
-        Intersectable.Intersection intersection = findClosestIntersection(ray);
-
-        // אם אין חיתוך – נחזיר צבע רקע
-        if (intersection == null) {
-            return scene.background;
-        }
-
-        // חישוב צבע רקורסיבי בנקודת החיתוך עם הנחתה חדשה
-        return calcColor(intersection, ray, level - 1, kkx).scale(kx);
-    }
-
-    private Color calcGlobalEffects(Intersectable.Intersection intersection, int level, Double3 k) {
-
-        Material material = intersection.geometry.getMaterial();
-        return calcGlobalEffect(constructRefractedRay(intersection), material.kT, level, k)
-                .add(calcGlobalEffect(constructReflectedRay(intersection), material.kR, level, k);
-
-    }
-
-    /**
-     * Performs preprocessing on the intersection:
-     * Initializes the ray direction, normal at the hit point, and their dot product.
-     *
-     * @param intersection the intersection to preprocess
-     * @param rayDirection the direction of the incoming ray
-     * @return true if the dot product of the normal and ray direction is non-zero, false otherwise
-     */
-    private boolean preprocessIntersection(Intersectable.Intersection intersection, Vector rayDirection) {
-        // Store ray direction
-        intersection.rayDirection = rayDirection;
-
-        // Compute the normal at the hit point from the geometry
-        Vector normal = intersection.geometry.getNormal(intersection.point);
-        intersection.normalAtPoint = normal;
-
-        // Compute dot product
-        intersection.dotProductRayNormal = normal.dotProduct(rayDirection);
-
-        // Valid intersection only if the dot product is non-zero
-        return intersection.dotProductRayNormal != 0;
-    }
-
-    /**
      * Initializes the light-related fields of the intersection.
      *
      * @param intersection the intersection to update
@@ -277,6 +142,45 @@ public class SimpleRayTracer extends RayTracerBase {
         // Check: both dot products should have the same sign (i.e., their product should be positive)
         return intersection.dotProductRayNormal * intersection.dotProductLightNormal > 0;
     }
+
+//    private boolean unshaded(Intersectable.Intersection intersection) {
+//        Vector l = intersection.lightDirection;
+//        Vector n = intersection.normalAtPoint;
+//        Point p = intersection.point;
+//        LightSource light = intersection.lightSource;
+//
+//        Vector lightDir = l.scale(-1); // כיוון הקרן - מהנקודה אל מקור האור
+//        Point shadowOrigin = p.add(n.scale(n.dotProduct(lightDir) > 0 ? DELTA : -DELTA)); // היסט קטן כדי להימנע מחיתוך עצמי
+//        Ray shadowRay = new Ray(shadowOrigin, lightDir);
+//
+//        List<Intersectable.Intersection> intersections = scene.geometries.calculateIntersections(shadowRay);
+//        if (intersections == null) return true; // אין כלום בדרך – לא חסום
+//
+//        double lightDistance = light.getDistance(p);
+//        Double3 transparency = Double3.ONE; // מתחילים מ־1 (כל האור עובר)
+//
+//        for (Intersectable.Intersection shadowHit : intersections) {
+//            if (shadowHit.point.distance(p) < lightDistance) {
+//                Double3 kT = shadowHit.geometry.getMaterial().kT;
+//
+//                // אם האובייקט אטום – חסום לחלוטין
+//                if (kT.lowerThan(MIN_CALC_COLOR_K)) {
+//                    return false;
+//                }
+//
+//                // נחליש את האור בהתאם לשקיפות
+//                transparency = transparency.product(kT);
+//
+//                // אם האור נחלש מתחת לסף – נחשב כחסום
+//                if (transparency.lowerThan(MIN_CALC_COLOR_K)) {
+//                    return false;
+//                }
+//            }
+//        }
+//
+//        return true; // אף עצם לא חסם את האור באופן משמעותי
+//    }
+
 
     private boolean unshaded(Intersectable.Intersection intersection) {
         Vector l = intersection.lightDirection;
@@ -304,6 +208,166 @@ public class SimpleRayTracer extends RayTracerBase {
 
         return true; // לא נמצא גוף אטום דיו כדי לחסום את האור
     }
+
+
+
+
+    private Double3 transparency(Intersectable.Intersection intersection) {
+        Vector l = intersection.lightDirection;
+        Vector n = intersection.normalAtPoint;
+        Point p = intersection.point;
+        LightSource light = intersection.lightSource;
+        Double3 ktr = Double3.ONE;
+
+        // כיוון הקרן - מהנקודה אל מקור האור
+        Vector lightDir = l.scale(-1);
+        Point shadowOrigin = p.add(n.scale(n.dotProduct(lightDir) > 0 ? DELTA : -DELTA));
+        Ray shadowRay = new Ray(shadowOrigin, lightDir);
+
+        List<Intersectable.Intersection> shadowIntersections = scene.geometries.calculateIntersections(shadowRay);
+        if (shadowIntersections == null) return ktr;
+
+        double lightDistance = light.getDistance(p);
+
+        for (Intersectable.Intersection shadowHit : shadowIntersections) {
+            if (shadowHit.point.distance(p) < lightDistance) {
+                Double3 kT = shadowHit.geometry.getMaterial().kT;
+                ktr = ktr.product(kT);
+
+                if (ktr.lowerThan(MIN_CALC_COLOR_K)) {
+                    return Double3.ZERO;
+                }
+            }
+        }
+
+        return ktr;
+    }
+
+    /**
+     * Calculates the local lighting effects (diffuse and specular) at the intersection point.
+     *
+     * @param intersection the intersection point
+     * @return the color resulting from the local lighting effects
+     */
+    private Color calcColorLocalEffects(Intersectable.Intersection intersection,Double3 k) {
+        Color color = intersection.geometry.getEmission();
+        for (LightSource lightSource : scene.lights) {
+            if (!setLightSource(intersection, lightSource)) {
+                continue;
+            }
+            Double3 ktr = transparency(intersection);
+            if (ktr.product(k).greaterThan(MIN_CALC_COLOR_K)) {
+                Color iL = lightSource.getIntensity(intersection.point).scale(ktr);
+                color = color.add(
+                        iL.scale(calcDiffusive(intersection)
+                                .add(calcSpecular(intersection))));
+            }
+        }
+        return color;
+//        Color color = intersection.geometry.getEmission();
+//
+//        for (LightSource lightSource : scene.lights) {
+//            if (setLightSource(intersection, lightSource) && unshaded(intersection)) {
+//                Color iL = lightSource.getIntensity(intersection.point);
+//                Double3 diff = calcDiffusive(intersection);
+//                Double3 spec = calcSpecular(intersection);
+//                color = color.add(iL.scale(diff.add(spec)));
+//            }
+//        }
+//        return color;
+    }
+
+    private Color calcColor(Intersectable.Intersection intersection, int level, Double3 k) {
+        Color color = calcColorLocalEffects(intersection,k);
+        return level == 1 ? color :
+                color.add(calcGlobalEffects(intersection, level, k));
+    }
+
+
+
+
+    private Ray constructReflectedRay(Intersectable.Intersection intersection) {
+        Vector incoming = intersection.rayDirection; // כיוון הקרן הפוגעת
+        Vector normal = intersection.normalAtPoint;  // הנורמל בנקודת הפגיעה
+        Point point = intersection.point;                        // נקודת הפגיעה
+
+        // מחשבים את כיוון ההשתקפות לפי חוק ההשתקפות
+        Vector reflectedDir = incoming.subtract(normal.scale(2 * incoming.dotProduct(normal))).normalize();
+
+        // מוסיפים DELTA כדי להזיז את נקודת ההתחלה מעט החוצה מהגוף
+        Vector delta = normal.scale(incoming.dotProduct(normal) > 0 ? DELTA : -DELTA);
+        return new Ray( point,reflectedDir,normal);
+    }
+
+
+    private Ray constructRefractedRay(Intersectable.Intersection intersection) {
+        Vector reflectedDir = intersection.rayDirection; // כיוון הקרן הפוגעת
+        Vector normal = intersection.normalAtPoint;  // הנורמל בנקודת הפגיעה
+        Point point = intersection.point;                        // נקודת הפגיעה
+        return new Ray( point,reflectedDir,normal);
+    }
+
+
+    /**
+     * Calculates the final color at the intersection point, including ambient and local lighting.
+     *
+     * @param intersection the intersection data
+     * @param ray the ray that hit the geometry
+     * @return the resulting color at the intersection point
+     */
+    private Color calcColor(Intersectable.Intersection intersection, Ray ray) {
+        return preprocessIntersection(intersection, ray.getDirection())
+                ?scene.ambientLight.getIntensity()
+                .scale(intersection.geometry.getMaterial().kA) // Scale by ambient reflection coefficient
+                .add(calcColor(intersection, MAX_CALC_COLOR_LEVEL, INITIAL_K)): Color.BLACK;
+    }
+    private Color calcGlobalEffect(Ray ray, Double3 kx, int level, Double3 k){
+        Double3 kkx = k.product(kx);
+        if (kkx.lowerThan(MIN_CALC_COLOR_K)) return Color.BLACK;
+
+        Intersectable.Intersection intersection = findClosestIntersection(ray);
+        if (intersection == null) return scene.background.scale(kx);
+
+        return preprocessIntersection(intersection, ray.getDirection())
+                ? calcColor(intersection, level - 1, kkx).scale(kx)
+                : Color.BLACK;
+    }
+
+
+    private Color calcGlobalEffects(Intersectable.Intersection intersection, int level, Double3 k) {
+        Color color = Color.BLACK;
+        Material material = intersection.material;
+
+        // קרן משתקפת
+        Double3 kR = material.kR;
+        Ray reflectedRay = constructReflectedRay(intersection);
+        color = color.add(calcGlobalEffect(reflectedRay, kR, level, k));
+
+        // קרן שקופה
+        Double3 kT = material.kT;
+        Ray refractedRay = constructRefractedRay(intersection);
+        color = color.add(calcGlobalEffect(refractedRay, kT, level, k));
+
+        return color;
+    }
+
+
+
+    /**
+     * Performs preprocessing on the intersection:
+     * Initializes the ray direction, normal at the hit point, and their dot product.
+     *
+     * @param intersection the intersection to preprocess
+     * @param rayDirection the direction of the incoming ray
+     * @return true if the dot product of the normal and ray direction is non-zero, false otherwise
+     */
+    private boolean preprocessIntersection(Intersectable.Intersection intersection, Vector rayDirection) {
+        intersection.rayDirection = rayDirection.normalize();
+        intersection.normalAtPoint = intersection.geometry.getNormal(intersection.point);
+        intersection.dotProductRayNormal = intersection.rayDirection.dotProduct(intersection.normalAtPoint);
+        return !Util.isZero(intersection.dotProductRayNormal);
+    }
+
 
 
 }

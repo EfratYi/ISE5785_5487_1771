@@ -4,6 +4,7 @@ import geometries.Intersectable;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 import geometries.Intersectable.Intersection;
 
@@ -11,6 +12,7 @@ import geometries.Intersectable.Intersection;
  * Represents a ray in 3D space, defined by a starting point and a direction vector.
  */
 public class Ray {
+    private static final double DELTA = 0.1;
     /**
      * The starting point of the ray.
      */
@@ -31,6 +33,14 @@ public class Ray {
     public Ray(Point p, Vector v) {
         head = p;
         direction = v.normalize();
+    }
+
+    public Ray(Point head,Vector direction,Vector normal) {
+        double dot = alignZero(direction.dotProduct(normal));
+        double scaleFactor = (dot > 0 ? DELTA : -DELTA);
+        this.head = head.add(normal.scale(scaleFactor));
+        this.direction = direction.normalize();
+
     }
 
     /**

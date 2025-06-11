@@ -30,7 +30,7 @@ class GeometriesTests {
 
         // TC01: Empty collection of geometries
         Geometries emptyGeometries = new Geometries();
-        Ray ray = new Ray(new Point(0, 0, 0), new Vector(1, 0, 0));
+        Ray ray = new Ray(new Point(0, 0, 0), new Vector(1, 0, 0), new Vector(0, 1, 0)); // Ray in any direction
         assertNull(emptyGeometries.findIntersections(ray), "Expected null for empty geometries");
 
         // TC02: No geometries are intersected

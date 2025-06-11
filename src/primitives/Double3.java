@@ -142,7 +142,7 @@ public record Double3(double d1, double d2, double d3) {
      * @return true if each component of this is less than the corresponding component
      *         in the other Double3, false otherwise
      */
-    public boolean lowerThan(Double3 other) {
-        return d1 < other.d1 && d2 < other.d2 && d3 < other.d3;
+    public boolean greaterThan(double other) {
+        return d1 > other && d2 > other && d3 > other;
     }
 }
