@@ -261,16 +261,6 @@ class EnhancedGeometricCompositionTest {
                 .setKc(1).setKl(0.0001).setKq(0.000001)  // Same attenuation
         );
 
-        // Camera positioned like simple scene but adjusted for our geometry
-//        cameraBuilder
-//                .setLocation(new Point(-90, 50, 180))
-//                .setDirection(new Point(-1, 0, 1), new Vector(0, 1, 0))
-//                .setVpDistance(180)
-//                .setVpSize(160, 160)
-//                .setResolution(1200, 1200)
-//                .build()
-//                .renderImage()
-//                .writeToImage("enhanced_geometric_composition_realistic_lighting");
     }
 
     /**
