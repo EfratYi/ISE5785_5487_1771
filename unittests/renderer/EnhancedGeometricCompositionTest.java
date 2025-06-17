@@ -8,11 +8,11 @@ import scene.Scene;
 
 /**
  * Enhanced test for creating a geometric composition scene with realistic lighting
- * Fixed version - removed unwanted shadows and added transparency + POLYGON!
+ * Based on the simple scene's lighting principles but with more complex geometry
  */
-class EnhancedGeometricCompositionWithPolygonTest {
+class EnhancedGeometricCompositionTest {
 
-    private final Scene scene = new Scene("Enhanced Geometric Composition Scene with Polygon");
+    private final Scene scene = new Scene("Enhanced Geometric Composition Scene");
     private final Camera.Builder cameraBuilder = Camera.getBuilder()
             .setRayTracer(scene, RayTracerType.SIMPLE);
 
@@ -64,33 +64,63 @@ class EnhancedGeometricCompositionWithPolygonTest {
         return new Geometries(
                 new Triangle(p1, p2, p3)
                         .setEmission(new Color(0, 140, 160))
-                        .setMaterial(new Material().setKD(0.6).setKS(0.4).setShininess(60).setkT(0.3)),
+                        .setMaterial(new Material()
+                                .setKD(0.1)          // Very low diffuse
+                                .setKS(0.3)          // Some specular
+                                .setShininess(100)   // High shininess for glass effect
+                                .setkT(0.85)         // 85% transparent
+                                .setkR(0.1))  ,
                 new Triangle(p1, p3, p4)
                         .setEmission(new Color(0, 140, 160))
-                        .setMaterial(new Material().setKD(0.6).setKS(0.4).setShininess(60).setkT(0.3)),
+                        .setMaterial(new Material()
+                                .setKD(0.1)          // Very low diffuse
+                                .setKS(0.3)          // Some specular
+                                .setShininess(100)   // High shininess for glass effect
+                                .setkT(0.85)         // 85% transparent
+                                .setkR(0.1))  ,
                 new Triangle(p1, p2, apex)
                         .setEmission(new Color(0, 160, 180))
-                        .setMaterial(new Material().setKD(0.6).setKS(0.4).setShininess(60).setkT(0.3)),
+                        .setMaterial(new Material()
+                                .setKD(0.1)          // Very low diffuse
+                                .setKS(0.3)          // Some specular
+                                .setShininess(100)   // High shininess for glass effect
+                                .setkT(0.85)         // 85% transparent
+                                .setkR(0.1))  ,
                 new Triangle(p2, p3, apex)
                         .setEmission(new Color(0, 120, 140))
-                        .setMaterial(new Material().setKD(0.6).setKS(0.4).setShininess(60).setkT(0.3)),
+                        .setMaterial(new Material()
+                                .setKD(0.1)          // Very low diffuse
+                                .setKS(0.3)          // Some specular
+                                .setShininess(100)   // High shininess for glass effect
+                                .setkT(0.85)         // 85% transparent
+                                .setkR(0.1))  ,
                 new Triangle(p3, p4, apex)
                         .setEmission(new Color(0, 130, 150))
-                        .setMaterial(new Material().setKD(0.6).setKS(0.4).setShininess(60).setkT(0.3)),
+                        .setMaterial(new Material()
+                                .setKD(0.1)          // Very low diffuse
+                                .setKS(0.3)          // Some specular
+                                .setShininess(100)   // High shininess for glass effect
+                                .setkT(0.85)         // 85% transparent
+                                .setkR(0.1))  ,
                 new Triangle(p4, p1, apex)
                         .setEmission(new Color(0, 150, 170))
-                        .setMaterial(new Material().setKD(0.6).setKS(0.4).setShininess(60).setkT(0.3))
+                        .setMaterial(new Material()
+                                .setKD(0.1)          // Very low diffuse
+                                .setKS(0.3)          // Some specular
+                                .setShininess(100)   // High shininess for glass effect
+                                .setkT(0.85)         // 85% transparent
+                                .setkR(0.1))
         );
     }
 
     /**
-     * Create prominent golden cube (right side)
+     * Create prominent golden cube (right side) - simplified like yellow cube
      */
     private Geometries createProminentGoldenCube() {
         double size = 50;
         double centerX = 110;
         double centerY = -15;
-        double centerZ = -100;
+        double centerZ = -80;
 
         // Calculate all 8 vertices
         Point p1 = new Point(centerX - size/2, centerY - size/2, centerZ - size/2);
@@ -102,10 +132,12 @@ class EnhancedGeometricCompositionWithPolygonTest {
         Point p7 = new Point(centerX + size/2, centerY + size/2, centerZ + size/2);
         Point p8 = new Point(centerX - size/2, centerY + size/2, centerZ + size/2);
 
+        // Uniform golden color for all faces (like the simple yellow cube)
         Color cubeColor = new Color(200, 160, 0);
         Material cubeMaterial = new Material().setKD(0.6).setKS(0.4).setShininess(40);
 
         return new Geometries(
+                // All faces with same color and material
                 new Triangle(p1, p2, p3).setEmission(cubeColor).setMaterial(cubeMaterial),
                 new Triangle(p1, p3, p4).setEmission(cubeColor).setMaterial(cubeMaterial),
                 new Triangle(p2, p6, p7).setEmission(cubeColor).setMaterial(cubeMaterial),
@@ -122,106 +154,70 @@ class EnhancedGeometricCompositionWithPolygonTest {
     }
 
     /**
-     * Create realistic floor - shortened behind mirror
+     * Create realistic floor - like the simple scene but with slight transparency
      */
     private Geometries createRealisticFloor(double y, double size) {
         return new Geometries(
-                // Main floor area (in front of mirror) - וודא שהרצפה נעצרת לפני המראה
-                new Triangle(new Point(-size, y, -130),  // עצירה לפני המראה (במקום -120)
-                        new Point(size, y, -130),
+                new Triangle(new Point(-size, y, -size * 2),
+                        new Point(size, y, -size * 2),
                         new Point(size, y, size))
-                        .setEmission(new Color(80, 60, 40))
+                        .setEmission(new Color(80, 60, 40))  // Same as simple scene
                         .setMaterial(new Material()
-                                .setKD(0.8)
-                                .setKS(0.2)
-                                .setShininess(10)),
-                new Triangle(new Point(-size, y, -130),
+                                .setKD(0.8)          // Same as simple scene
+                                .setKS(0.2)          // Same as simple scene
+                                .setShininess(10)    // Same as simple scene
+                                .setkT(0.1)),        // Just a tiny bit of transparency
+                new Triangle(new Point(-size, y, -size * 2),
                         new Point(size, y, size),
                         new Point(-size, y, size))
                         .setEmission(new Color(80, 60, 40))
                         .setMaterial(new Material()
                                 .setKD(0.8)
                                 .setKS(0.2)
-                                .setShininess(10))
+                                .setShininess(10)
+                                .setkT(0.1))
         );
     }
 
+
     /**
-     * Create rectangular polygon mirror on back wall - בדיוק כמו המראה המקורית אבל מפוליגון!
+     * Create mirror (back wall) - like simple scene
      */
-    private Geometries createRectangularPolygonMirror() {
-        double width = 100;
-        double height =10;
-        double centerX = -80;
-        double centerY = 90;
-        double centerZ = -135;  // Much further back - closer to wall
+    private Geometries createLargeMirror() {
+        double width = 120;
+        double height = 100;
+        double centerX = -10;
+        double centerY = 20;
+        double centerZ = -60;
 
-        // 4 נקודות של המלבן - בדיוק כמו המראה המקורית
-        // חשוב: נקודות בסדר נכון עבור פוליגון (נגד כיוון השעון)
-        Point p1 = new Point(centerX - width/2, centerY - height/2, centerZ);  // שמאל למטה
-        Point p2 = new Point(centerX + width/2, centerY - height/2, centerZ);  // ימין למטה
-        Point p3 = new Point(centerX + width/2, centerY + height/2, centerZ);  // ימין למעלה
-        Point p4 = new Point(centerX - width/2, centerY + height/2, centerZ);  // שמאל למעלה
+        Point p1 = new Point(centerX - width/2, centerY - height/2, centerZ);
+        Point p2 = new Point(centerX + width/2, centerY - height/2, centerZ);
+        Point p3 = new Point(centerX + width/2, centerY + height/2, centerZ);
+        Point p4 = new Point(centerX - width/2, centerY + height/2, centerZ);
 
-        // אותו חומר רפלקטיבי כמו המראה המקורית
         return new Geometries(
-                new Polygon(p1, p2, p3, p4)  // פוליגון ריבועי במקום 2 משולשים!
+                new Triangle(p1, p2, p3)
+                        .setEmission(new Color(20, 20, 30))  // Same as simple scene
+                        .setMaterial(new Material().setKD(0.1).setKS(0.9).setShininess(200).setkR(0.7)),
+                new Triangle(p1, p3, p4)
                         .setEmission(new Color(20, 20, 30))
                         .setMaterial(new Material().setKD(0.1).setKS(0.9).setShininess(200).setkR(0.7))
         );
     }
 
     /**
-     * Create decorative octagonal polygon on the floor - פוליגון נוסף לקישוט
-     * מתומן מקושט על הרצפה
-     */
-    private Geometries createFloorOctagonDecoration() {
-        double radius = 35;
-        double centerX = 30;
-        double centerY = -59.5;  // ממש על הרצפה
-        double centerZ = 20;
-
-        // יצירת 8 נקודות של המתומן
-        Point[] octPoints = new Point[8];
-        for (int i = 0; i < 8; i++) {
-            double angle = Math.PI * i / 4.0;  // 45 מעלות בין כל נקודה
-            double x = centerX + radius * Math.cos(angle);
-            double z = centerZ + radius * Math.sin(angle);
-            octPoints[i] = new Point(x, centerY, z);
-        }
-
-        // חומר מבריק עם צבע סגול יפה
-        Material octMaterial = new Material()
-                .setKD(0.6)
-                .setKS(0.4)
-                .setShininess(80)
-                .setkT(0.2);  // שקיפות קלה
-
-        Color octColor = new Color(120, 60, 140);  // סגול יפה
-
-        return new Geometries(
-                new Polygon(octPoints)
-                        .setEmission(octColor)
-                        .setMaterial(octMaterial)
-        );
-    }
-
-    /**
-     * Main enhanced scene with realistic lighting and POLYGON! - FIXED VERSION
+     * Main enhanced scene with realistic lighting (based on simple scene)
      */
     @Test
-    void createEnhancedGeometricSceneWithPolygon() {
-        // Warm background
+    void createEnhancedGeometricScene() {
+        // Warm background like simple scene
         scene.setBackground(new Color(120, 80, 50));
 
-        // Clean floor without transparency issues
+        // Realistic floor
         scene.geometries.add(createRealisticFloor(-60, 400));
 
-        // Add RECTANGULAR POLYGON MIRROR - same as original but using Polygon instead of triangles! 🔥
-        scene.geometries.add(createRectangularPolygonMirror());
-
-        // Add decorative octagonal polygon on floor for extra polygon fun! 🎨
-        // scene.geometries.add(createFloorOctagonDecoration());  // זמנית מושבת לבדוק אם זה מפריע
+        // Add mirror for reflections
+        scene.geometries.add(createLargeMirror());
 
         // Add main green pyramid (left side)
         scene.geometries.add(createEnhancedPyramid());
@@ -229,115 +225,71 @@ class EnhancedGeometricCompositionWithPolygonTest {
         // Add small teal pyramid (front center)
         scene.geometries.add(createSmallTealPyramid());
 
+
         // Add prominent golden cube (right side)
         scene.geometries.add(createProminentGoldenCube());
 
-        // TRANSPARENT red sphere that was hiding pyramid - now see-through!
+        // Add red-orange spheres
         scene.geometries.add(
                 new Sphere(new Point(-30, -20, 80), 22)
-                        .setEmission(new Color(120, 25, 25))  // Much dimmer emission
-                        .setMaterial(new Material()
-                                .setKD(0.2)          // Even less diffuse reflection
-                                .setKS(0.3)          // Reduced specular to be less bright
-                                .setShininess(60)    // Lower shininess for softer look
-                                .setkT(0.85))        // Higher transparency to cast less shadow
+                        .setEmission(new Color(180, 40, 40))  // Similar to simple scene red
+                        .setMaterial(new Material().setKD(0.6).setKS(0.4).setShininess(60))
         );
 
-        // Second sphere - solid orange (no transparency issues)
         scene.geometries.add(
                 new Sphere(new Point(50, 0, 100), 25)
                         .setEmission(new Color(200, 60, 30))
                         .setMaterial(new Material().setKD(0.6).setKS(0.4).setShininess(60))
         );
 
-        // IMPROVED LIGHTING - much softer to minimize sphere shadows
+        // REALISTIC LIGHTING - exactly like simple scene approach
 
-        // Very gentle ambient light to fill shadows
-        scene.setAmbientLight(new AmbientLight(new Color(40, 40, 40)));
+        // Soft ambient light (like simple scene)
+        scene.setAmbientLight(new AmbientLight(new Color(20, 20, 20)));
 
-        // Much softer main directional light
+        // Main directional light - soft and natural (like simple scene)
         scene.lights.add(new DirectionalLight(
-                new Color(100, 80, 60),   // Even softer
-                new Vector(1, -1, -1)
+                new Color(150, 120, 100),  // Same intensity as simple scene
+                new Vector(1, -1, -1)      // Same direction as simple scene
         ));
 
-        // Very gentle spot light
+        // Gentle spot light (like simple scene)
         scene.lights.add(new SpotLight(
-                new Color(60, 45, 30),    // Much softer spot light
+                new Color(100, 80, 60),    // Same as simple scene
                 new Point(60, 80, 80),
                 new Vector(-1, -1.5, -1))
-                .setKc(1).setKl(0.0002).setKq(0.000002)  // Stronger attenuation
+                .setKc(1).setKl(0.0001).setKq(0.000001)  // Same attenuation
         );
 
-        // Multiple soft fill lights to eliminate sphere shadows
-        scene.lights.add(new PointLight(
-                new Color(50, 40, 30),    // Soft fill light from above
-                new Point(0, 120, 50))
-                .setKc(1).setKl(0.0008).setKq(0.00001)
-        );
-
-        scene.lights.add(new PointLight(
-                new Color(30, 25, 20),    // Additional soft fill from side
-                new Point(-100, 50, 120))
-                .setKc(1).setKl(0.001).setKq(0.00002)
-        );
-
-        // Additional light to highlight the polygon mirror
-        scene.lights.add(new PointLight(
-                new Color(40, 40, 40),    // Neutral light for the rectangular mirror
-                new Point(-10, 100, -100))
-                .setKc(1).setKl(0.0005).setKq(0.00001)
-        );
-
-        // Camera positioned for best view of all polygons
-        cameraBuilder
-                .setLocation(new Point(-50, 10, 180))
-                .setDirection(new Point(-1, 0, 1), new Vector(0, 1, 0))
-                .setVpDistance(80)
-                .setVpSize(160, 160)
-                .setResolution(1200, 1200)
-                .build()
-                .renderImage()
-                .writeToImage("mirror");
-    }
-
-    /**
-     * Ultra high quality version with polygons
-     */
-//    @Test
-//    void createUltraHighQualitySceneWithPolygons() {
-//        // Use the fixed scene setup with polygons
-//        createEnhancedGeometricSceneWithPolygon();
-//
-//        // Override with ultra-high quality settings
+        // Camera positioned like simple scene but adjusted for our geometry
 //        cameraBuilder
 //                .setLocation(new Point(-90, 50, 180))
 //                .setDirection(new Point(-1, 0, 1), new Vector(0, 1, 0))
-//                .setVpDistance(200)
+//                .setVpDistance(180)
 //                .setVpSize(160, 160)
-//                .setResolution(2000, 2000)
-//                .build()
-//                .renderImage()
-//                .writeToImage("enhanced_geometric_composition_polygon_mirror_ultra_HQ");
-//    }
-//
-//    /**
-//     * Alternative camera angle to better show the floor octagon
-//     */
-//    @Test
-//    void createPolygonFocusedView() {
-//        // Same scene setup
-//        createEnhancedGeometricSceneWithPolygon();
-//
-//        // Camera positioned to show both polygons clearly
-//        cameraBuilder
-//                .setLocation(new Point(-60, 80, 150))
-//                .setDirection(new Point(0, -10, 0), new Vector(0, 1, 0))
-//                .setVpDistance(150)
-//                .setVpSize(140, 140)
 //                .setResolution(1200, 1200)
 //                .build()
 //                .renderImage()
-//                .writeToImage("enhanced_geometric_composition_polygon_focused");
-//    }
+//                .writeToImage("enhanced_geometric_composition_realistic_lighting");
+    }
+
+    /**
+     * Ultra high quality version with realistic lighting
+     */
+    @Test
+    void createUltraHighQualityScene() {
+        // Use the enhanced scene setup
+        createEnhancedGeometricScene();
+
+        // Override with ultra-high quality settings
+        cameraBuilder
+                .setLocation(new Point(-90, 50, 180))
+                .setDirection(new Point(-1, 0, 1), new Vector(0, 1, 0))
+                .setVpDistance(180)
+                .setVpSize(160, 160)
+                .setResolution(2000, 2000)
+                .build()
+                .renderImage()
+                .writeToImage("enhanced_geometric_composition_realistic_ultra_HQ");
+    }
 }
