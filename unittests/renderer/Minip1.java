@@ -1,18 +1,24 @@
 package renderer;
-
-import org.junit.jupiter.api.Test;
 import geometries.*;
-import lighting.*;
-import primitives.*;
+import lighting.AmbientLight;
+import lighting.DirectionalLight;
+import lighting.PointLight;
+import lighting.SpotLight;
+import org.junit.jupiter.api.Test;
+import primitives.Color;
+import primitives.Point;
+import primitives.Vector;
+import renderer.Camera;
+import renderer.ImageWriter;
+import renderer.SimpleRayTracer;
 import scene.Scene;
 
-/**
- * Enhanced test for creating a geometric composition scene with realistic lighting
- * Based on the simple scene's lighting principles but with more complex geometry
- */
-class EnhancedGeometricCompositionTest {
+import static java.awt.Color.*;
 
-    private final Scene scene = new Scene("Enhanced Geometric Composition Scene");
+class Minip1 {
+
+
+    private final Scene scene = new Scene("mini Scene");
     private final Camera.Builder cameraBuilder = Camera.getBuilder()
             .setRayTracer(scene, RayTracerType.SIMPLE);
 
@@ -244,22 +250,115 @@ class EnhancedGeometricCompositionTest {
 
         // REALISTIC LIGHTING - exactly like simple scene approach
 
-        // Soft ambient light (like simple scene)
-        scene.setAmbientLight(new AmbientLight(new Color(20, 20, 20)));
+        // Improved lighting setup
+        scene.setAmbientLight(new AmbientLight(new Color(25, 25, 25))); // Slightly brighter ambient
 
-        // Main directional light - soft and natural (like simple scene)
-        scene.lights.add(new DirectionalLight(
-                new Color(150, 120, 100),  // Same intensity as simple scene
-                new Vector(1, -1, -1)      // Same direction as simple scene
-        ));
-
-        // Gentle spot light (like simple scene)
-        scene.lights.add(new SpotLight(
-                new Color(100, 80, 60),    // Same as simple scene
-                new Point(60, 80, 80),
-                new Vector(-1, -1.5, -1))
-                .setKc(1).setKl(0.0001).setKq(0.000001)  // Same attenuation
+        // Replace DirectionalLight with softer, positioned light source
+        scene.lights.add(new PointLight(
+                new Color(120, 100, 80),  // Softer, warmer general illumination
+                new Point(0, 100, 200))   // High and distant for general lighting
+                .setRadius(15)            // Soft shadows
+                .setKc(1).setKl(0.00005).setKq(0.0000005)
         );
+
+        // Main spotlight for dramatic effect
+        scene.lights.add(new SpotLight(
+                new Color(140, 110, 90),
+                new Point(80, 100, 120),
+                new Vector(-1, -1.2, -1))
+                .setRadius(12)  // Soft shadows
+                .setKc(1).setKl(0.0001).setKq(0.000001)
+        );
+
+        // Fill light to reduce harsh shadows
+        scene.lights.add(new PointLight(
+                new Color(60, 50, 40),    // Dimmer fill light
+                new Point(-80, 60, 100))
+                .setRadius(8)             // Soft shadows
+                .setKc(1).setKl(0.0002).setKq(0.000002)
+        );
+
+        // Accent light for the golden cube
+        scene.lights.add(new SpotLight(
+                new Color(100, 80, 50),
+                new Point(150, 30, 50),
+                new Vector(-1, -0.5, -1))
+                .setRadius(6)   // Smaller radius for more defined but still soft shadows
+                .setKc(1).setKl(0.0003).setKq(0.000003)
+        );
+
+        // Colored accent lights for atmosphere
+        // Cool blue light from behind/side - creates nice contrast
+        scene.lights.add(new SpotLight(
+                new Color(40, 80, 120),
+                new Point(-150, 80, 0),
+                new Vector(1, -0.8, 0.2))
+                .setRadius(10)
+                .setKc(1).setKl(0.0002).setKq(0.000002)
+        );
+
+        // Warm orange/red light from the opposite side
+        scene.lights.add(new PointLight(
+                new Color(120, 60, 20),
+                new Point(100, -20, 200))
+                .setRadius(8)
+                .setKc(1).setKl(0.0004).setKq(0.000004)
+        );
+
+        // Purple rim light for the spheres - creates beautiful edge lighting
+        scene.lights.add(new SpotLight(
+                new Color(80, 40, 100),
+                new Point(0, 120, 200),
+                new Vector(0, -1, -0.5))
+                .setRadius(7)
+                .setKc(1).setKl(0.0005).setKq(0.000005)
+        );
+
+        // Green light to complement the pyramid
+        scene.lights.add(new PointLight(
+                new Color(60, 100, 40),
+                new Point(-120, 30, 100))
+                .setRadius(9)
+                .setKc(1).setKl(0.0003).setKq(0.000003)
+        );
+
+        // Soft white light from below for subtle floor illumination
+        scene.lights.add(new PointLight(
+                new Color(80, 80, 90),
+                new Point(0, -40, 50))
+                .setRadius(20)  // Very soft shadows
+                .setKc(1).setKl(0.0001).setKq(0.000001)
+        );
+
+        // Dramatic spotlight from far right - creates strong directional lighting
+        scene.lights.add(new SpotLight(
+                new Color(100, 90, 70),
+                new Point(200, 60, 100),
+                new Vector(-1.5, -0.3, -0.8))
+                .setRadius(5)   // Sharper but still soft
+                .setKc(1).setKl(0.0006).setKq(0.000006)
+        );
+
+
+
+
+        //מקור
+//        // Soft ambient light (like simple scene)
+//        scene.setAmbientLight(new AmbientLight(new Color(20, 20, 20)));
+//
+//        // Main directional light - soft and natural (like simple scene)
+//        scene.lights.add(new DirectionalLight(
+//                new Color(150, 120, 100),  // Same intensity as simple scene
+//                new Vector(1, -1, -1)      // Same direction as simple scene
+//        ));
+////
+////        // Gentle spot light (like simple scene)
+//        scene.lights.add(new SpotLight(
+//                new Color(100, 80, 60),    // Same as simple scene
+//                new Point(60, 80, 80),
+//                new Vector(-1, -1.5, -1)).setRadius(30)
+//                .setKc(1).setKl(0.0001).setKq(0.000001)  // Same attenuation
+//        );
 
 
     }
@@ -281,6 +380,8 @@ class EnhancedGeometricCompositionTest {
                 .setResolution(2000, 2000)
                 .build()
                 .renderImage()
-                .writeToImage("enhanced_geometric_composition_realistic_ultra_HQ");
+                .writeToImage("mini");
     }
 }
+
+

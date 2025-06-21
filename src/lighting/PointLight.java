@@ -3,6 +3,7 @@ package lighting;
 import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
+import renderer.TargetArea;
 
 /**
  * Represents a point light source in 3D space.
@@ -30,6 +31,36 @@ public class PointLight extends Light implements LightSource {
      * Quadratic attenuation factor.
      */
     private double kQ = 0;  // quadratic attenuation
+    /**
+     * Radius for soft shadows (0 means hard shadows)
+     */
+
+    /**
+     * Number of sample points for soft shadows
+     */
+    private double radius = 0;
+
+    public PointLight setRadius(double radius) {
+        this.radius = radius;
+        return this;
+    }
+
+    /**
+     * Sets the number of sample points for soft shadows
+     *
+     */
+    public double getRadius() {
+        return radius;
+    }
+
+
+
+    /**
+     * Creates a target area for soft shadows
+     *
+     * @param hitPoint the point being lit
+     * @return TargetArea object, or null if radius is 0
+     */
 
     /**
      * Constructs a point light with the given intensity and position.
@@ -103,4 +134,9 @@ public class PointLight extends Light implements LightSource {
     public double getDistance(Point point) {
         return this.position.distance(point);
     }
+    public Point getPosition() {
+
+        return position;
+    }
+
 }

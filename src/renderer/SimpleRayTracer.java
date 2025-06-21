@@ -1,8 +1,8 @@
 package renderer;
-
 import geometries.Geometries;
 import geometries.Intersectable.Intersection;
 import geometries.Material;
+import lighting.PointLight;
 import primitives.Color;
 import primitives.Double3;
 import primitives.Point;
@@ -29,7 +29,6 @@ public class SimpleRayTracer extends RayTracerBase {
     private static final int MAX_CALC_COLOR_LEVEL = 10;
     private static final double MIN_CALC_COLOR_K = 0.001;
     private static final Double3 INITIAL_K = Double3.ONE;
-
     /**
      * Constructor to initialize the simple ray tracer with a given scene.
      *
@@ -201,7 +200,20 @@ public class SimpleRayTracer extends RayTracerBase {
             if (!setLightSource(intersection, lightSource)) {
                 continue;
             }
-            Double3 ktr = transparency(intersection);
+            Double3 ktr = Double3.ONE; // התחל עם אור מלא
+            if (lightSource instanceof PointLight) {
+                PointLight pointLight = (PointLight) lightSource;
+                if (pointLight.getRadius() > 0) {
+                    // עבור אור נקודתי עם גודל - השתמש ב-soft shadows
+                    ktr = calcLocalEffectsSoftShadows(pointLight, intersection);
+                } else {
+                    // עבור אור נקודתי ללא גודל - השתמש ב-transparency הרגיל
+                    ktr = transparency(intersection);
+                }
+            } else {
+                // עבור אור כיווני - השתמש ב-transparency הרגיל
+                ktr = transparency(intersection);
+            }
             if (ktr.product(k).greaterThan(MIN_CALC_COLOR_K)) {
                 Color iL = lightSource.getIntensity(intersection.point).scale(ktr);
                 color = color.add(
@@ -315,5 +327,90 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
 
+    private Double3 calcLocalEffectsSoftShadows(PointLight lightSource, Intersection intersection) {
+        // חישוב כיוון האור מהנקודה למקור האור
+        Vector l = lightSource.getL(intersection.point);
 
+        // יצירת וקטור ניצב לכיוון האור
+        Vector vUp = null;
+        try {
+            // ננסה ליצור וקטור ניצב עם וקטור (0,1,0) או (1,0,0)
+            if (Math.abs(l.dotProduct(new Vector(0, 1, 0))) < 0.9) {
+                vUp = l.crossProduct(new Vector(0, 1, 0)).normalize();
+            } else {
+                vUp = l.crossProduct(new Vector(1, 0, 0)).normalize();
+            }
+        } catch (Exception e) {
+            vUp = new Vector(0, 1, 0);
+        }
+
+        // מספר דגימות - מתחילים עם מספר קטן לבדיקה
+        int numSamples = 5; // 5x5 = 25 דגימות
+
+        // יצירת TargetArea
+        TargetArea blackBoard = new TargetArea(
+                numSamples,
+                lightSource.getRadius() * 2, // קוטר האור
+                l.scale(-1), // כיוון מהנקודה למקור האור
+                vUp,
+                lightSource.getPosition()
+        );
+
+        double totalShadow = 0.0;
+        int validRays = 0;
+
+        // דגימה של קרניים במישור מקור האור
+        for (int i = 0; i < numSamples; i++) {
+            for (int j = 0; j < numSamples; j++) {
+                try {
+                    // יצירת קרן מהנקודה למקור האור המדגם
+                    Ray shadowRay = blackBoard.constructRay(j, i, intersection.point);
+
+                    if (shadowRay != null) {
+                        validRays++;
+
+                        // בדיקה אם הקרן חסומה
+                        if (isBlocked(shadowRay, lightSource.getDistance(intersection.point))) {
+                            totalShadow += 1.0; // חסומה - מוסיפים הצללה מלאה
+                    }
+                        // אם לא חסומה - לא מוסיפים הצללה (0)
+                    }
+                } catch (Exception e) {
+                    // המשך גם אם יש בעיה עם קרן אחת
+                    continue;
+                }
+            }
+        }
+
+        // חישוב אחוז האור שעובר
+        if (validRays > 0) {
+            double shadowPercentage = totalShadow / validRays;
+            double lightPercentage = 1.0 - shadowPercentage;
+            return new Double3(lightPercentage);
+        } else {
+            // אם לא היו קרניים תקינות, השתמש בשקיפות הרגילה
+            return transparency(intersection);
+        }
+    }
+
+    /**
+     * בודק אם קרן צללים חסומה על ידי אובייקט
+     */
+    private boolean isBlocked(Ray shadowRay, double lightDistance) {
+        List<Intersection> shadowIntersections = scene.geometries.calculateIntersections(shadowRay);
+        if (shadowIntersections == null) return false;
+
+        for (Intersection shadowIntersection : shadowIntersections) {
+            double distToIntersection = shadowRay.getHead().distance(shadowIntersection.point);
+
+            // אם יש חיתוך לפני מקור האור
+            if (distToIntersection < lightDistance - DELTA) {
+                // אם הגוף אטום - יש הצללה
+                if (shadowIntersection.geometry.getMaterial().kT.lowerThan(MIN_CALC_COLOR_K)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

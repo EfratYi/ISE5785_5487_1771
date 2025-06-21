@@ -3,6 +3,7 @@ package renderer;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+import scene.Scene;
 
 import java.util.List;
 
@@ -127,7 +128,10 @@ public class Camera implements Cloneable {
 
         pIJ = pIJ.add(vTo.scale(distance));
 
-        return new Ray(p0, pIJ.subtract(p0).normalize());
+//        return new Ray(p0, pIJ.subtract(p0).normalize());
+        return new Ray(p0, pIJ.subtract(p0));//pC-p0
+
+
     }
 
     /**
@@ -318,7 +322,7 @@ public class Camera implements Cloneable {
          * @param type  the type of ray tracer
          * @return this Builder instance
          */
-        public Builder setRayTracer(scene.Scene scene, renderer.RayTracerType type) {
+        public Builder setRayTracer(Scene scene, RayTracerType type) {
             switch (type) {
                 case SIMPLE:
                     camera.rayTracer = new renderer.SimpleRayTracer(scene);

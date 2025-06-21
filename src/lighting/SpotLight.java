@@ -80,4 +80,10 @@ public class SpotLight extends PointLight {
         super.setKq(kQ);
         return this;
     }
+    @Override
+    public SpotLight setRadius(double radius) {
+        super.setRadius(radius);
+        return this;
+    }
+
 }

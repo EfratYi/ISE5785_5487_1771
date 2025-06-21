@@ -2,6 +2,7 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
+import primitives.Util;
 import primitives.Vector;
 
 import java.util.List;
@@ -73,20 +74,24 @@ public class Sphere extends RadialGeometry {
         double t1 = alignZero(tm - th);
         double t2 = alignZero(tm + th);
 
-        if (t1 > 0 && t2 > 0) {
-            // Both intersection points are in front of the ray's origin
-            return List.of(new Intersection(this, ray.getPoint(t1)), (new Intersection(this, ray.getPoint(t2))));
+        // הגנה מפני ערכים קטנים מדי או שליליים
+        boolean t1Valid = t1 > 0 && !Util.isZero(t1);
+        boolean t2Valid = t2 > 0 && !Util.isZero(t2);
+
+        if (t1Valid && t2Valid) {
+            return List.of(
+                    new Intersection(this, ray.getPoint(t1)),
+                    new Intersection(this, ray.getPoint(t2))
+            );
         }
-        if (t1 > 0) {
-            // Only the first intersection point is valid
+        if (t1Valid) {
             return List.of(new Intersection(this, ray.getPoint(t1)));
         }
-        if (t2 > 0) {
-            // Only the second intersection point is valid
+        if (t2Valid) {
             return List.of(new Intersection(this, ray.getPoint(t2)));
         }
 
-        // No valid intersection points
         return null;
     }
+
 }
