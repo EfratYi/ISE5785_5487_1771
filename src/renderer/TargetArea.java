@@ -58,13 +58,10 @@ public class TargetArea {
      * @return a new Ray object representing the constructed ray, or null if the pixel is outside the circle
      */
     public Ray constructRay(int j, int i, Point p) {
-        // מרכז הלוח הוא מיקום מקור האור
         Point pc = p0;
 
-        // חישוב גודל פיקסל בודד
         double pixelSize = size / res;
 
-        // חישוב מיקום הפיקסל על הלוח
         double yi = (i - (res - 1) / 2.0) * pixelSize;
         double xj = (j - (res - 1) / 2.0) * pixelSize;
 
@@ -74,15 +71,12 @@ public class TargetArea {
         if (!isZero(yi))
             pij = pij.add(vUp.scale(yi));
 
-        // בדיקה אם הפיקסל מחוץ למעגל (רדיוס = size/2)
         if (pc.distance(pij) > size / 2.0)
             return null;
 
-        // חישוב כיוון הקרן מנקודת הפגיעה למקור האור המדגם
         Vector dir = pij.subtract(p).normalize();
 
-        // יצירת והחזרת הקרן עם DELTA משופר
-        Vector normal = dir.scale(-1); // הנורמל הוא בכיוון הפוך לכיוון הקרן
+        Vector normal = dir.scale(-1);
         return new Ray(p, dir, normal);
     }
 }

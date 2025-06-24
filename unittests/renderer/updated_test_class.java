@@ -341,7 +341,16 @@ class updated_test_class {
     }
 
     /**
-     * Test with soft shadows
+     * Test scene rendering with enhanced geometries and soft shadows.
+     * <p>
+     * This test creates a visually rich scene that includes:
+     * <ul>
+     *   <li>A realistic floor and multiple complex geometric objects like a mirror, pyramid, and a golden cube.</li>
+     *   <li>Two prominent spheres with differing positions, sizes, and emission colors.</li>
+     *   <li>A detailed lighting setup with ambient light, point lights, and spotlights, all configured to produce soft shadows using radius-based diffusion.</li>
+     * </ul>
+     * The camera is positioned at a calculated angle and distance to capture a balanced perspective of the scene,
+     * and the rendered image is saved under the filename {@code Shadows}.
      */
     @Test
     void createEnhancedGeometricSceneSoftShadows() {
@@ -414,9 +423,23 @@ class updated_test_class {
                 .setResolution(800, 800)
                 .build()
                 .renderImage()
-                .writeToImage("jhj____Shadows");
+                .writeToImage("Shadows");
     }
-
+    /**
+     * Test scene rendering with multiple geometries and soft shadows.
+     * <p>
+     * This test generates a complex 3D scene including:
+     * <ul>
+     *   <li>A realistic base floor and mirror, reused for visual consistency.</li>
+     *   <li>Ten pyramids placed in a grid-like pattern with varied colors.</li>
+     *   <li>Ten randomly positioned spheres with randomized colors and radii.</li>
+     *   <li>Five translucent cubes placed in a row to test transparency and soft shadow rendering.</li>
+     * </ul>
+     * The lighting setup uses multiple soft sources (point and spot lights with radius)
+     * to simulate realistic lighting and minimize harsh shadows. The camera is placed further away
+     * for a wide-angle view capturing the entire setup. The rendered result is saved as
+     * {@code multiply_amount_of_geometries_with_soft_shadows}.
+     */
     @Test
     void createSceneWithMultipleGeometriesSoftShadows() {
         // Set up scene
@@ -426,11 +449,9 @@ class updated_test_class {
         scene.geometries.add(createEnhancedPyramid());
         scene.geometries.add(createSmallTealPyramid());
 
-// בסיס
         scene.geometries.add(createRealisticFloor(-60, 400));
         scene.geometries.add(createLargeMirror());
 
-// הוספת 15 פירמידות
         for (int i = 0; i < 10; i++) {
             double x = -140 + (i % 5) * 70;
             double z = -100 + (i / 5) * 80;
@@ -438,7 +459,6 @@ class updated_test_class {
             scene.geometries.add(createRandomPyramid(center, 30, 40, new Color(30 + i * 10, 100 + (i * 5) % 100, 60 + (i * 7) % 150)));
         }
 
-//// הוספת 10 כדורים
         Random rand = new Random();
 
         for (int i = 0; i < 10; i++) {

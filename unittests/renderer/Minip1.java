@@ -338,29 +338,6 @@ class Minip1 {
                 .setRadius(5)   // Sharper but still soft
                 .setKc(1).setKl(0.0006).setKq(0.000006)
         );
-
-
-
-
-        //מקור
-//        // Soft ambient light (like simple scene)
-//        scene.setAmbientLight(new AmbientLight(new Color(20, 20, 20)));
-//
-//        // Main directional light - soft and natural (like simple scene)
-//        scene.lights.add(new DirectionalLight(
-//                new Color(150, 120, 100),  // Same intensity as simple scene
-//                new Vector(1, -1, -1)      // Same direction as simple scene
-//        ));
-////
-////        // Gentle spot light (like simple scene)
-//        scene.lights.add(new SpotLight(
-//                new Color(100, 80, 60),    // Same as simple scene
-//                new Point(60, 80, 80),
-//                new Vector(-1, -1.5, -1)).setRadius(30)
-//                .setKc(1).setKl(0.0001).setKq(0.000001)  // Same attenuation
-//        );
-
-
     }
 
     /**
