@@ -1,13 +1,12 @@
 package renderer;
-
-import static java.awt.Color.*;
-
 import org.junit.jupiter.api.Test;
-
 import geometries.*;
 import lighting.*;
 import primitives.*;
 import scene.Scene;
+
+import java.util.Random;
+
 
 /**
  * Tests for reflection and transparency functionality, test for partial
@@ -205,6 +204,66 @@ class updated_test_class {
         );
     }
 
+    private Geometries createRandomPyramid(Point baseCenter, double size, double height, Color color) {
+        double half = size / 2;
+        Point apex = baseCenter.add(new Vector(0, height, 0));
+        Point p1 = baseCenter.add(new Vector(-half, 0, -half));
+        Point p2 = baseCenter.add(new Vector(half, 0, -half));
+        Point p3 = baseCenter.add(new Vector(half, 0, half));
+        Point p4 = baseCenter.add(new Vector(-half, 0, half));
+
+        Material mat = new Material().setKD(0.6).setKS(0.4).setShininess(40);
+
+        return new Geometries(
+                new Triangle(p1, p2, p3).setEmission(color).setMaterial(mat),
+                new Triangle(p1, p3, p4).setEmission(color).setMaterial(mat),
+                new Triangle(p1, p2, apex).setEmission(color).setMaterial(mat),
+                new Triangle(p2, p3, apex).setEmission(color).setMaterial(mat),
+                new Triangle(p3, p4, apex).setEmission(color).setMaterial(mat),
+                new Triangle(p4, p1, apex).setEmission(color).setMaterial(mat)
+        );
+    }
+
+    private Sphere createSphere(Point center, double radius, Color color) {
+        return (Sphere) new Sphere(center, radius)
+                .setEmission(color)
+                .setMaterial(new Material().setKD(0.6).setKS(0.3).setShininess(60));
+    }
+
+    private Geometries createTranslucentCube(Point center, double size, Color color) {
+        double half = size / 2;
+        Material material = new Material()
+                .setKD(0.3)      // החזרת אור דיפיוזי
+                .setKS(0.4)      // החזרת אור מבריק
+                .setShininess(100)
+                .setkT(0.5)      // שקיפות מתונה - נראית אך עדיין שקופה
+                .setkR(0.05);    // החזרת אור קלה (רפלקציה)
+
+        Point p1 = center.add(new Vector(-half, -half, -half));
+        Point p2 = center.add(new Vector(half, -half, -half));
+        Point p3 = center.add(new Vector(half, half, -half));
+        Point p4 = center.add(new Vector(-half, half, -half));
+        Point p5 = center.add(new Vector(-half, -half, half));
+        Point p6 = center.add(new Vector(half, -half, half));
+        Point p7 = center.add(new Vector(half, half, half));
+        Point p8 = center.add(new Vector(-half, half, half));
+
+        return new Geometries(
+                new Triangle(p1, p2, p3).setEmission(color).setMaterial(material),
+                new Triangle(p1, p3, p4).setEmission(color).setMaterial(material),
+                new Triangle(p2, p6, p7).setEmission(color).setMaterial(material),
+                new Triangle(p2, p7, p3).setEmission(color).setMaterial(material),
+                new Triangle(p4, p3, p7).setEmission(color).setMaterial(material),
+                new Triangle(p4, p7, p8).setEmission(color).setMaterial(material),
+                new Triangle(p1, p4, p8).setEmission(color).setMaterial(material),
+                new Triangle(p1, p8, p5).setEmission(color).setMaterial(material),
+                new Triangle(p1, p5, p6).setEmission(color).setMaterial(material),
+                new Triangle(p1, p6, p2).setEmission(color).setMaterial(material),
+                new Triangle(p5, p8, p7).setEmission(color).setMaterial(material),
+                new Triangle(p5, p7, p6).setEmission(color).setMaterial(material)
+        );
+    }
+
     /**
      * Test without soft shadows
      */
@@ -268,30 +327,6 @@ class updated_test_class {
                 .setKc(1).setKl(0.0003).setKq(0.000003)
         );
 
-        //מקור
-        // Lighting setup
-//        scene.setAmbientLight(new AmbientLight(new Color(20, 20, 20)));
-//
-//        scene.lights.add(new DirectionalLight(
-//                new Color(150, 120, 100),
-//                new Vector(1, -1, -1)
-//        ));
-//
-//        // Regular lights without soft shadows (size = 0)
-//        scene.lights.add(new SpotLight(
-//                new Color(100, 80, 60),
-//                new Point(60, 80, 80),
-//                new Vector(-1, -1.5, -1))
-//                .setRadius(0)  // No soft shadows
-//                .setKc(1).setKl(0.0001).setKq(0.000001)
-//        );
-//
-//        scene.lights.add(new PointLight(
-//                new Color(80, 60, 40),
-//                new Point(-50, 50, 150))
-//                .setRadius(0)  // No soft shadows
-//                .setKc(1).setKl(0.0001).setKq(0.000001)
-//        );
 
         // Build camera
         cameraBuilder
@@ -334,7 +369,7 @@ class updated_test_class {
 
 
         // Improved lighting setup
-        scene.setAmbientLight(new AmbientLight(new Color(25, 25, 25))); // Slightly brighter ambient
+        scene.setAmbientLight(new AmbientLight(new Color(17, 17, 17))); // Slightly brighter ambient
 
         // Replace DirectionalLight with softer, positioned light source
         scene.lights.add(new PointLight(
@@ -355,7 +390,7 @@ class updated_test_class {
 
         // Fill light to reduce harsh shadows
         scene.lights.add(new PointLight(
-                new Color(60, 50, 40),    // Dimmer fill light
+                new Color(80, 70, 65),    // Dimmer fill light
                 new Point(-80, 60, 100))
                 .setRadius(8)             // Soft shadows
                 .setKc(1).setKl(0.0002).setKq(0.000002)
@@ -370,35 +405,9 @@ class updated_test_class {
                 .setKc(1).setKl(0.0003).setKq(0.000003)
         );
 
-
-        //מקור
-        // Lighting setup
-//        scene.setAmbientLight(new AmbientLight(new Color(20, 20, 20)));
-
-//        scene.lights.add(new DirectionalLight(
-//                new Color(150, 120, 100),
-//                new Vector(1, -1, -1)
-//        ));
-//
-//        // Regular lights without soft shadows (size = 0)
-//        scene.lights.add(new SpotLight(
-//                new Color(100, 80, 60),
-//                new Point(60, 80, 80),
-//                new Vector(-1, -1.5, -1))
-//                .setRadius(10)
-//                .setKc(1).setKl(0.0001).setKq(0.000001)
-//        );
-//
-//        scene.lights.add(new PointLight(
-//                new Color(80, 60, 40),
-//                new Point(-50, 50, 150))
-//                .setRadius(10)
-//                .setKc(1).setKl(0.0001).setKq(0.000001)
-//        );
-
         // Build camera
         cameraBuilder
-                .setLocation(new Point(-90, 50, 180))
+                .setLocation(new Point(-190, 50, 180))
                 .setDirection(new Point(-1, 0, 1), new Vector(0, 1, 0))
                 .setVpDistance(180)
                 .setVpSize(160, 160)
@@ -407,4 +416,103 @@ class updated_test_class {
                 .renderImage()
                 .writeToImage("jhj____Shadows");
     }
+
+    @Test
+    void createSceneWithMultipleGeometriesSoftShadows() {
+        // Set up scene
+        scene.setBackground(new Color(120, 80, 50));
+        scene .geometries.add(createRealisticFloor(-60, 400));
+        scene.geometries.add(createLargeMirror());
+        scene.geometries.add(createEnhancedPyramid());
+        scene.geometries.add(createSmallTealPyramid());
+
+// בסיס
+        scene.geometries.add(createRealisticFloor(-60, 400));
+        scene.geometries.add(createLargeMirror());
+
+// הוספת 15 פירמידות
+        for (int i = 0; i < 10; i++) {
+            double x = -140 + (i % 5) * 70;
+            double z = -100 + (i / 5) * 80;
+            Point center = new Point(x, -60, z);
+            scene.geometries.add(createRandomPyramid(center, 30, 40, new Color(30 + i * 10, 100 + (i * 5) % 100, 60 + (i * 7) % 150)));
         }
+
+//// הוספת 10 כדורים
+        Random rand = new Random();
+
+        for (int i = 0; i < 10; i++) {
+            double x = -120 + rand.nextDouble() * 240;  // בין -120 ל-120
+            double z = 120 + rand.nextDouble() * 100;   // רחוק מהפירמידות
+            double y = -30;
+
+            Point center = new Point(x, y, z);
+            double radius = 8 + rand.nextDouble() * 4;
+
+            int r = 80 + rand.nextInt(100);
+            int g = 50 + rand.nextInt(100);
+            int b = 80 + rand.nextInt(100);
+            Color color = new Color(r, g, b);
+
+            scene.geometries.add(createSphere(center, radius, color));
+        }
+        for (int i = 0; i < 5; i++) {
+            double x = -80 + i * 40;  // מרווחים אופקיים בין קוביות
+            double y = -45;           // גובה הקוביות
+            double z = 150;           // אותו עומק של הכדורים
+
+            Point center = new Point(x, y, z);
+            Color color = new Color(100 + i * 20, 80 + i * 10, 150 - i * 10);  // צבע משתנה לכל קוביה
+
+            scene.geometries.add(createTranslucentCube(center, 25, color));  // גודל 25, קוביה שקופה
+        }
+
+        // Improved lighting setup
+        scene.setAmbientLight(new AmbientLight(new Color(17, 17, 17))); // Slightly brighter ambient
+
+        // Replace DirectionalLight with softer, positioned light source
+        scene.lights.add(new PointLight(
+                new Color(120, 100, 80),  // Softer, warmer general illumination
+                new Point(0, 100, 200))   // High and distant for general lighting
+                .setRadius(15)            // Soft shadows
+                .setKc(1).setKl(0.00005).setKq(0.0000005)
+        );
+
+        // Main spotlight for dramatic effect
+        scene.lights.add(new SpotLight(
+                new Color(140, 110, 90),
+                new Point(80, 100, 120),
+                new Vector(-1, -1.2, -1))
+                .setRadius(12)  // Soft shadows
+                .setKc(1).setKl(0.0001).setKq(0.000001)
+        );
+
+        // Fill light to reduce harsh shadows
+        scene.lights.add(new PointLight(
+                new Color(80, 70, 65),    // Dimmer fill light
+                new Point(-80, 60, 100))
+                .setRadius(8)             // Soft shadows
+                .setKc(1).setKl(0.0002).setKq(0.000002)
+        );
+
+        // Accent light for the golden cube
+        scene.lights.add(new SpotLight(
+                new Color(100, 80, 50),
+                new Point(150, 30, 50),
+                new Vector(-1, -0.5, -1))
+                .setRadius(6)   // Smaller radius for more defined but still soft shadows
+                .setKc(1).setKl(0.0003).setKq(0.000003)
+        );
+
+        // Build camera
+        cameraBuilder
+                .setLocation(new Point(50, 20, 440)) // יותר רחוק, שומר על אותו קו מבט
+                .setDirection(new Point(-10, 20, -60), new Vector(0, 1, 0)) // עדיין מביט על המראה
+                .setVpDistance(180)
+                .setVpSize(160, 160)
+                .setResolution(800, 800)
+                .build()
+                .renderImage()
+                .writeToImage("multiply_amount_of_geometries_with_soft_shadows");
+    }
+}
