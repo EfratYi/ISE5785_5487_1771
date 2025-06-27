@@ -225,7 +225,6 @@ class EnhancedGeometricCompositionTest {
         // Add small teal pyramid (front center)
         scene.geometries.add(createSmallTealPyramid());
 
-
         // Add prominent golden cube (right side)
         scene.geometries.add(createProminentGoldenCube());
 
