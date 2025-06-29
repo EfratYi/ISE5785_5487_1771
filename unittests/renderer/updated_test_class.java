@@ -520,5 +520,117 @@ class updated_test_class {
                 .renderImage()
                 .writeToImage("multiply_amount_of_geometries_with_soft_shadows_with_window");
     }
+    @Test
+    void createSceneWithMultipleGeometries() {
+        // Set background color to a warm brown tone resembling sunset
+        scene.setBackground(new Color(120, 80, 50));
+
+        // Add a large floor surface with matte material
+        scene.geometries.add(createRealisticFloor(-60, 400));
+
+        // Add a large mirror in the background
+        scene.geometries.add(createLargeMirror());
+
+        // Add a large green pyramid (left side)
+        scene.geometries.add(createEnhancedPyramid());
+
+        // Add a glass object inside a window
+        scene.geometries.add(createGlassInWindow());
+
+        // Main dramatic spotlight - focused lighting with atmosphere
+        scene.lights.add(new SpotLight(
+                new Color(1400, 1100, 1000),
+                new Point(200, 20, -45),
+                new Vector(0.9995, 0, 0))
+                .setRadius(0)
+                .setKc(1).setKl(0.0001).setKq(0.000001)
+        );
+
+        // Secondary spotlight - illuminates from another angle
+        scene.lights.add(new SpotLight(
+                new Color(140, 110, 90),
+                new Point(80, 100, 120),
+                new Vector(-1, -1.2, -1))
+                .setRadius(0)
+                .setKc(1).setKl(0.0001).setKq(0.000001)
+        );
+
+        // Fill light - reduces hard shadows
+        scene.lights.add(new PointLight(
+                new Color(80, 70, 65),
+                new Point(-80, 60, 100))
+                .setRadius(0)
+                .setKc(1).setKl(0.0002).setKq(0.000002)
+        );
+
+        // Accent light - emphasizes a specific area
+        scene.lights.add(new SpotLight(
+                new Color(100, 80, 50),
+                new Point(150, 30, 50),
+                new Vector(-1, -0.5, -1))
+                .setRadius(0)
+                .setKc(1).setKl(0.0003).setKq(0.000003)
+        );
+
+        // Add the wall with window on the right
+        scene.geometries.add(createTwoWallsWithWindows());
+
+        // Duplicate of the main dramatic spotlight (intentional or redundant)
+        scene.lights.add(new SpotLight(
+                new Color(1400, 1100, 1000),
+                new Point(200, 20, -45),
+                new Vector(0.9995, 0, 0))
+                .setRadius(0)
+                .setKc(1).setKl(0.0001).setKq(0.000001)
+        );
+
+        // Ambient light - soft global illumination
+        scene.setAmbientLight(new AmbientLight(new Color(17, 17, 17)));
+
+        // === Create 10 small pyramids in a grid layout ===
+        for (int i = 0; i < 10; i++) {
+            double x = -140 + (i % 5) * 70;  // 5 pyramids in a row, 70 units apart
+            double z = -100 + (i / 5) * 80;  // 2 rows, 80 units apart
+            Point center = new Point(x, -60, z);  // aligned to floor height
+            scene.geometries.add(createRandomPyramid(center, 30, 40,
+                    new Color(30 + i * 10, 100 + (i * 5) % 100, 60 + (i * 7) % 150)));
+        }
+
+        // === Create 10 spheres in random positions ===
+        Random rand = new Random();
+        for (int i = 0; i < 10; i++) {
+            double x = -120 + rand.nextDouble() * 240;  // between -120 and 120
+            double z = 120 + rand.nextDouble() * 100;   // farther from pyramids (120-220)
+            double y = -30;  // slightly above the floor
+            Point center = new Point(x, y, z);
+            double radius = 8 + rand.nextDouble() * 4;  // radius between 8 and 12
+            int r = 80 + rand.nextInt(100);  // red 80–180
+            int g = 50 + rand.nextInt(100);  // green 50–150
+            int b = 80 + rand.nextInt(100);  // blue 80–180
+            Color color = new Color(r, g, b);
+            scene.geometries.add(createSphere(center, radius, color));
+        }
+
+        // === Create 5 transparent cubes in a row ===
+        for (int i = 0; i < 5; i++) {
+            double x = -80 + i * 40;  // 40 units apart
+            double y = -45;           // slightly above floor
+            double z = 150;           // same depth as spheres
+            Point center = new Point(x, y, z);
+            Color color = new Color(100 + i * 20, 80 + i * 10, 150 - i * 10);
+            scene.geometries.add(createTranslucentCube(center, 25, color));
+        }
+
+        // === Configure camera and render image ===
+        cameraBuilder
+                .setLocation(new Point(10, 20, 440)) // further away, same line of sight
+                .setDirection(new Point(-10, 20, -60), new Vector(0, 1, 0)) // looking at mirror
+                .setVpDistance(180)
+                .setVpSize(160, 160)
+                .setResolution(800, 800)
+                .build()
+                .renderImage()
+                .writeToImage("multiply_amount_of_geometries_with_with_window");
+    }
 
 }
