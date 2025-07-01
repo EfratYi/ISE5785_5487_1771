@@ -520,6 +520,107 @@ class Minip1 {
                 .renderImage()
                 .writeToImage("multiply_amount_of_geometries_with_soft_shadows_with_window");
     }
+
+    @Test
+    void createSceneWithMultipleGeometriesSoftShadows_MultiThreaded() {
+        Scene scene = new Scene("Scene with many geometries and soft shadows");
+
+        scene.setBackground(new Color(120, 80, 50));
+        scene.geometries.add(createRealisticFloor(-60, 400));
+        scene.geometries.add(createLargeMirror());
+        scene.geometries.add(createEnhancedPyramid());
+        scene.geometries.add(createGlassInWindow());
+        scene.geometries.add(createTwoWallsWithWindows());
+
+        // Light sources
+        scene.lights.add(new SpotLight(
+                new Color(1400, 1100, 1000),
+                new Point(200, 20, -45),
+                new Vector(0.9995, 0, 0))
+                .setRadius(12)
+                .setKc(1).setKl(0.0001).setKq(0.000001));
+
+        scene.lights.add(new SpotLight(
+                new Color(140, 110, 90),
+                new Point(80, 100, 120),
+                new Vector(-1, -1.2, -1))
+                .setRadius(12)
+                .setKc(1).setKl(0.0001).setKq(0.000001));
+
+        scene.lights.add(new PointLight(
+                new Color(80, 70, 65),
+                new Point(-80, 60, 100))
+                .setRadius(8)
+                .setKc(1).setKl(0.0002).setKq(0.000002));
+
+        scene.lights.add(new SpotLight(
+                new Color(100, 80, 50),
+                new Point(150, 30, 50),
+                new Vector(-1, -0.5, -1))
+                .setRadius(6)
+                .setKc(1).setKl(0.0003).setKq(0.000003));
+
+        // Duplicate main spotlight (intentional)
+        scene.lights.add(new SpotLight(
+                new Color(1400, 1100, 1000),
+                new Point(200, 20, -45),
+                new Vector(0.9995, 0, 0))
+                .setRadius(12)
+                .setKc(1).setKl(0.0001).setKq(0.000001));
+
+        scene.setAmbientLight(new AmbientLight(new Color(17, 17, 17)));
+
+        // Pyramids
+        for (int i = 0; i < 10; i++) {
+            double x = -140 + (i % 5) * 70;
+            double z = -100 + (i / 5) * 80;
+            Point center = new Point(x, -60, z);
+            scene.geometries.add(createRandomPyramid(center, 30, 40,
+                    new Color(30 + i * 10, 100 + (i * 5) % 100, 60 + (i * 7) % 150)));
+        }
+
+        // Spheres
+        Random rand = new Random();
+        for (int i = 0; i < 10; i++) {
+            double x = -120 + rand.nextDouble() * 240;
+            double z = 120 + rand.nextDouble() * 100;
+            double y = -30;
+            Point center = new Point(x, y, z);
+            double radius = 8 + rand.nextDouble() * 4;
+            Color color = new Color(
+                    80 + rand.nextInt(100),
+                    50 + rand.nextInt(100),
+                    80 + rand.nextInt(100));
+            scene.geometries.add(createSphere(center, radius, color));
+        }
+
+        // Transparent cubes
+        for (int i = 0; i < 5; i++) {
+            double x = -80 + i * 40;
+            double y = -45;
+            double z = 150;
+            Point center = new Point(x, y, z);
+            Color color = new Color(100 + i * 20, 80 + i * 10, 150 - i * 10);
+            scene.geometries.add(createTranslucentCube(center, 25, color));
+        }
+
+        // Optional: Build BVH for performance
+        // scene.geometries.buildBVH();
+
+        cameraBuilder
+                .setResolution(800, 800)
+                .setRayTracer(scene, RayTracerType.SIMPLE)
+                .setLocation(new Point(10, 20, 440))
+                .setDirection(new Point(-10, 20, -60), new Vector(0, 1, 0))
+                .setVpDistance(180)
+                .setVpSize(160, 160)
+                .setMultithreading(-2) // לדוגמה: -2 = מספר תהליכונים אוטומטי
+                .setDebugPrint(1.0)  // הדפסת התקדמות כל 1%
+                .build()
+                .renderImage()
+                .writeToImage("multiply_amount_of_geometries_with_soft_shadows_with_window_multythreaded");
+    }
+
     @Test
     void createSceneWithMultipleGeometries() {
         // Set background color to a warm brown tone resembling sunset
