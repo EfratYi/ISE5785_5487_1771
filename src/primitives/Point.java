@@ -12,7 +12,7 @@ public class Point {
     /**
      * The coordinates of the point
      */
-    final Double3 xyz;
+    protected final Double3 xyz;
 
     /**
      * Constructor to initialize Point based on Double3 object.
@@ -109,5 +109,16 @@ public class Point {
      */
     public Vector subtract(Point other) {
         return new Vector(xyz.subtract(other.xyz));
+    }
+    public double getX() {
+        return xyz.d1();
+    }
+
+    public double getY() {
+        return xyz.d2();
+    }
+
+    public double getZ() {
+        return xyz.d3();
     }
 }

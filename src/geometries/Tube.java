@@ -70,4 +70,6 @@ public class Tube extends RadialGeometry {
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         return List.of();
     }
+    @Override
+    public void setBoundingBox() {return ;}
 }

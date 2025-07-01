@@ -106,4 +106,22 @@ public class Polygon extends Geometry {
         // The intersection point is inside the polygon
         return List.of(new Intersection(this, intersectionPoint));
     }
+
+    @Override
+    public void setBoundingBox() {
+        double minX = Double.POSITIVE_INFINITY, maxX = Double.NEGATIVE_INFINITY;
+        double minY = Double.POSITIVE_INFINITY, maxY = Double.NEGATIVE_INFINITY;
+        double minZ = Double.POSITIVE_INFINITY, maxZ = Double.NEGATIVE_INFINITY;
+
+        for (Point p : vertices) {
+            minX = Math.min(minX, p.getX());
+            maxX = Math.max(maxX, p.getX());
+            minY = Math.min(minY, p.getY());
+            maxY = Math.max(maxY, p.getY());
+            minZ = Math.min(minZ, p.getZ());
+            maxZ = Math.max(maxZ, p.getZ());
+        }
+
+        this.boundingBox = new AABB(minX, maxX, minY, maxY, minZ, maxZ);
+    }
 }

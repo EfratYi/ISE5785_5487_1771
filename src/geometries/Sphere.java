@@ -93,5 +93,17 @@ public class Sphere extends RadialGeometry {
 
         return null;
     }
+    @Override
+    public void setBoundingBox() {
+        // מחשב תיבת גבול לפי נקודות קצה
+        // החלפה לפי סוג הגיאומטריה
+        double minX = center.getX() - radius;
+        double maxX = center.getX() + radius;
+        double minY = center.getY() - radius;
+        double maxY = center.getY() + radius;
+        double minZ = center.getZ() - radius;
+        double maxZ = center.getZ() + radius;
+        this.boundingBox = new AABB(minX, maxX, minY, maxY, minZ, maxZ);
 
+    }
 }

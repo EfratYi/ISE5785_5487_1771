@@ -104,4 +104,8 @@ public class Plane extends Geometry {
         Point intersectionPoint = ray.getHead().add(ray.getDirection().scale(t));
         return List.of(new Intersection(this, intersectionPoint));
     }
+    @Override
+    public void setBoundingBox() {
+        this.boundingBox = null; // Plane is infinite, so no bounding box
+    }
 }

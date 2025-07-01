@@ -27,12 +27,12 @@ public class Triangle extends Polygon {
     public Triangle(Point a, Point b, Point c) {
         super(a, b, c);
 
-        Point v0 = vertices.get(0);
-        Point v1 = vertices.get(1);
-        Point v2 = vertices.get(2);
+        Point p0 = vertices.get(0);
+        Point p1 = vertices.get(1);
+        Point p2 = vertices.get(2);
 
-        edge1 = v1.subtract(v0);
-        edge2 = v2.subtract(v0);
+        edge1 = p1.subtract(p0);
+        edge2 = p2.subtract(p0);
 
     }
 
@@ -92,4 +92,23 @@ public class Triangle extends Polygon {
 
         return List.of(new Intersection(this, ray.getPoint(t)));
     }
+    @Override
+    public void setBoundingBox() {
+        Point p0 = vertices.get(0);
+        Point p1 = vertices.get(1);
+        Point p2 = vertices.get(2);
+        // מחשבים min ו-max לכל ציר
+        double minX = Math.min(Math.min(p0.getX(), p1.getX()), p2.getX());
+        double maxX = Math.max(Math.max(p0.getX(), p1.getX()), p2.getX());
+
+        double minY = Math.min(Math.min(p0.getY(), p1.getY()), p2.getY());
+        double maxY = Math.max(Math.max(p0.getY(), p1.getY()), p2.getY());
+
+        double minZ = Math.min(Math.min(p0.getZ(), p1.getZ()), p2.getZ());
+        double maxZ = Math.max(Math.max(p0.getZ(), p1.getZ()), p2.getZ());
+
+        // יוצרים את תיבת ה-AABB ושומרים אותה
+        this.boundingBox = new AABB(minX, maxX, minY, maxY, minZ, maxZ);
+    }
+
 }

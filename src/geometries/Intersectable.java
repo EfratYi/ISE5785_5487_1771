@@ -10,7 +10,13 @@ import java.util.List;
  * This class provides methods to find intersection points of a ray with the geometry.
  */
 public abstract class Intersectable {
+    protected AABB boundingBox = null;
 
+    public AABB getBoundingBox() {
+        return boundingBox;
+    }
+
+    public abstract void setBoundingBox();
     /**
      * Finds the intersection points of a given ray with the geometry.
      * Uses the abstract method {@link #calculateIntersections(Ray)} and extracts the points.
@@ -128,3 +134,4 @@ public abstract class Intersectable {
         }
     }
 }
+
