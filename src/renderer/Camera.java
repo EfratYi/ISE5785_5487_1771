@@ -388,5 +388,15 @@ public class Camera implements Cloneable {
             camera.printInterval = interval;
             return this;
         }
+        public Builder enableBVH(Scene scene) {
+            scene.geometries.buildBVH();
+            return this;
+
+        }
+        public Builder enableCBR(Scene scene) {
+            scene.geometries.setBoundingBox();  // אם מימשת
+            return this;
+        }
+
     }
 }
