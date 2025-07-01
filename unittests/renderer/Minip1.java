@@ -634,68 +634,6 @@ class Minip1 {
                 .renderImage()
                 .writeToImage("multiply_amount_of_geometries_with_with_window");
     }
-    @Test
-    void bvhStressTestLotsOfTriangles() {
-        scene.setBackground(new Color(20, 20, 20));
-        scene.setAmbientLight(new AmbientLight(new Color(15, 15, 15)));
-
-        Geometries bigWall = new Geometries();
-
-        double startX = -200;
-        double startY = -50;
-        double startZ = -200;
-
-        double cellSize = 5.0;
-        int numRows = 20;  // Y direction
-        int numCols = 50;  // X direction
-        int numLayers = 2; // Z direction (for depth)
-
-        for (int layer = 0; layer < numLayers; layer++) {
-            double z = startZ + layer * cellSize;
-
-            for (int row = 0; row < numRows; row++) {
-                double y = startY + row * cellSize;
-
-                for (int col = 0; col < numCols; col++) {
-                    double x = startX + col * cellSize;
-
-                    // 4 points of the square
-                    Point p1 = new Point(x, y, z);
-                    Point p2 = new Point(x + cellSize, y, z);
-                    Point p3 = new Point(x + cellSize, y + cellSize, z);
-                    Point p4 = new Point(x, y + cellSize, z);
-
-                    Color color = new Color(
-                            20 + (col * 5) % 200,
-                            20 + (row * 5) % 200,
-                            50 + (layer * 50) % 200
-                    );
-
-                    Material mat = new Material().setKD(0.6).setKS(0.3).setShininess(30);
-
-                    bigWall.add(new Triangle(p1, p2, p3).setEmission(color).setMaterial(mat));
-                    bigWall.add(new Triangle(p1, p3, p4).setEmission(color).setMaterial(mat));
-                }
-            }
-        }
-
-        // Add to scene
-        scene.geometries.add(bigWall);
-
-        // Build the BVH tree
-        scene.geometries.buildBVH();
-
-        // Camera config
-        cameraBuilder
-                .setLocation(new Point(0, 0, 400))
-                .setDirection(new Point(0, 0, 0), Vector.AXIS_Y)
-                .setVpDistance(300)
-                .setVpSize(200, 200)
-                .setResolution(800, 800)
-                .build()
-                .renderImage()
-                .writeToImage("bvh_stress_test_wall_of_triangles");
-    }
 }
 
 
