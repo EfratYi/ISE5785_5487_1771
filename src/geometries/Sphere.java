@@ -103,7 +103,7 @@ public class Sphere extends RadialGeometry {
         double maxY = center.getY() + radius;
         double minZ = center.getZ() - radius;
         double maxZ = center.getZ() + radius;
-        this.boundingBox = new AABB(minX, maxX, minY, maxY, minZ, maxZ);
+        this.boundingBox = new BoundingBox(minX, maxX, minY, maxY, minZ, maxZ);
 
     }
 }

@@ -122,6 +122,6 @@ public class Polygon extends Geometry {
             maxZ = Math.max(maxZ, p.getZ());
         }
 
-        this.boundingBox = new AABB(minX, maxX, minY, maxY, minZ, maxZ);
+        this.boundingBox = new BoundingBox(minX, maxX, minY, maxY, minZ, maxZ);
     }
 }

@@ -134,10 +134,8 @@ public class Camera implements Cloneable {
 
         pIJ = pIJ.add(vTo.scale(distance));
 
-//        return new Ray(p0, pIJ.subtract(p0).normalize());
+        // return new Ray(p0, pIJ.subtract(p0).normalize());
         return new Ray(p0, pIJ.subtract(p0));//pC-p0
-
-
     }
 
     /**
@@ -153,7 +151,11 @@ public class Camera implements Cloneable {
         }
         return this;
     }
-    /** ...
+
+    /**
+     * Renders the image using the specified ray tracer.
+     *
+     * @return the Camera instance
      */
     public Camera renderImage() {
         pixelManager = new PixelManager(nY, nX, printInterval);
@@ -374,6 +376,13 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Sets the number of threads for rendering.
+         *
+         * @param threads the number of threads to use
+         * @return this Builder instance
+         * @throws IllegalArgumentException if the number of threads is less than -2
+         */
         public Builder setMultithreading(int threads) {
             if (threads < -2) throw new IllegalArgumentException("Multithreading must be -2 or higher");
             if (threads >= -1) camera.threadsCount = threads;
@@ -383,18 +392,41 @@ public class Camera implements Cloneable {
             }
             return this;
         }
+
+
+        /**
+         * Sets the interval for printing progress percentage.
+         *
+         * @param interval the interval in seconds
+         * @return this Builder instance
+         * @throws IllegalArgumentException if the interval is negative
+         */
         public Builder setDebugPrint(double interval) {
             if (interval < 0) throw new IllegalArgumentException("Interval value must be non-negative");
             camera.printInterval = interval;
             return this;
         }
+
+        /**
+         * Enables bounding volume hierarchy (BVH) for the scene.
+         *
+         * @param scene the scene to be rendered
+         * @return this Builder instance
+         */
         public Builder enableBVH(Scene scene) {
             scene.geometries.buildBVH();
             return this;
 
         }
+        /**
+         * Enables the Camera Based Ray Tracing (CBR) feature for the scene.
+         *
+         * @param scene the scene to be rendered
+         * @return this Builder instance
+         * @throws IllegalArgumentException if the scene's geometries do not have a bounding box
+         */
         public Builder enableCBR(Scene scene) {
-            scene.geometries.setBoundingBox();  // אם מימשת
+            scene.geometries.setBoundingBox();
             return this;
         }
 

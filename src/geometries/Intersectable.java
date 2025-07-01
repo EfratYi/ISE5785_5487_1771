@@ -10,9 +10,9 @@ import java.util.List;
  * This class provides methods to find intersection points of a ray with the geometry.
  */
 public abstract class Intersectable {
-    protected AABB boundingBox = null;
+    protected BoundingBox boundingBox = null;
 
-    public AABB getBoundingBox() {
+    public BoundingBox getBoundingBox() {
         return boundingBox;
     }
 

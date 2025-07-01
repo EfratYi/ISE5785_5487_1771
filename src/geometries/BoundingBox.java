@@ -7,18 +7,18 @@ import primitives.Vector;
 import java.util.List;
 
 /**
- * Axis-Aligned Bounding Box (AABB) implementation.
+ * Axis-Aligned Bounding Box (BoundingBox) implementation.
  */
-public class AABB {
+public class BoundingBox {
     public final double minX, maxX;
     public final double minY, maxY;
     public final double minZ, maxZ;
 
 
     /**
-     * Constructs an AABB with explicit min/max for each axis.
+     * Constructs an BoundingBox with explicit min/max for each axis.
      */
-    public AABB(double minX, double maxX, double minY, double maxY, double minZ, double maxZ) {
+    public BoundingBox(double minX, double maxX, double minY, double maxY, double minZ, double maxZ) {
         this.minX = minX;
         this.maxX = maxX;
         this.minY = minY;
@@ -27,26 +27,18 @@ public class AABB {
         this.maxZ = maxZ;
     }
 
-//    /**
-//     * Constructs an AABB from two corner points.
-//     */
-//    public AABB(Point min, Point max) {
-//        this(min.getX(), max.getX(), min.getY(), max.getY(), min.getZ(), max.getZ());
-//    }
-//
-//
 
     /**
      * Unites multiple bounding boxes into one that contains all of them.
      */
-    public static AABB union(List<AABB> boxes) {
+    public static BoundingBox union(List<BoundingBox> boxes) {
         if (boxes.isEmpty()) return null;
 
         double minX = Double.POSITIVE_INFINITY, maxX = Double.NEGATIVE_INFINITY;
         double minY = Double.POSITIVE_INFINITY, maxY = Double.NEGATIVE_INFINITY;
         double minZ = Double.POSITIVE_INFINITY, maxZ = Double.NEGATIVE_INFINITY;
 
-        for (AABB box : boxes) {
+        for (BoundingBox box : boxes) {
             if (box == null) continue; // מתעלמים מתיבות ריקות
 
             minX = Math.min(minX, box.minX);
@@ -57,7 +49,7 @@ public class AABB {
             maxZ = Math.max(maxZ, box.maxZ);
         }
 
-        return new AABB(minX, maxX, minY, maxY, minZ, maxZ);
+        return new BoundingBox(minX, maxX, minY, maxY, minZ, maxZ);
     }
 
     /**

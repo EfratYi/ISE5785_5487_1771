@@ -1,6 +1,5 @@
 package geometries;
 
-import primitives.Point;
 import primitives.Ray;
 
 import java.util.Collections;
@@ -25,7 +24,7 @@ public class Geometries extends Intersectable {
 
         for (Intersectable shape : shapes) {
             shape.setBoundingBox();
-            AABB box = shape.getBoundingBox();
+            BoundingBox box = shape.getBoundingBox();
             if (box == null || Double.isInfinite(box.minX) || Double.isInfinite(box.maxX)) continue;
             minX = Math.min(minX, box.minX);
             maxX = Math.max(maxX, box.maxX);
@@ -36,7 +35,7 @@ public class Geometries extends Intersectable {
 
         }
 
-        this.boundingBox = new AABB(minX, maxX, minY, maxY, minZ, maxZ);
+        this.boundingBox = new BoundingBox(minX, maxX, minY, maxY, minZ, maxZ);
 //        if (shapes.isEmpty()) return;
 //
 //        List<AABB> boxes = new LinkedList<>();
@@ -103,7 +102,6 @@ public class Geometries extends Intersectable {
         shapes.clear();
         shapes.add(left);
         shapes.add(right);
-//        setBoundingBox();
 
     }
     /**

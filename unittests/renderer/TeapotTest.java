@@ -1789,8 +1789,13 @@ class TeapotTest {
         for (int i = 10; i > 0; --i) {
             teapot1();
         }
-
     }
+
+    /**
+     * Teapot without improvements
+     * <p>
+     * This test renders a teapot without any optimizations like CBR or BVH.
+     */
     void teapot1() {
         Scene scene = new Scene("Test1 scene");
 
@@ -1800,6 +1805,7 @@ class TeapotTest {
                 .printGrid(50, new Color(YELLOW)) //
                 .writeToImage("teapot1");
     }
+
     /**
      * 10 Teapot tests with CBR
      */
@@ -1828,24 +1834,24 @@ class TeapotTest {
     void teapot2() {
         Scene scene = new Scene("Test2 scene");
 
-        prepareTeapot(scene) //
-                .enableCBR(scene) //
-                .build() //
+        prepareTeapot(scene)
+                .enableCBR(scene)
+                .build()
                 .renderImage() //
-                .printGrid(50, new Color(YELLOW)) //
+                .printGrid(50, new Color(YELLOW))
                 .writeToImage("teapot2");
     }
 
     /**
-     * Teapot with aetomatically BVH
+     * Teapot with automatically BVH
      */
     void teapot3() {
         Scene scene = new Scene("Test3 scene");
-        prepareTeapot(scene) //
-                .enableBVH(scene) //
-                .build() //
-                .renderImage() //
-                .printGrid(50, new Color(YELLOW)) //
+        prepareTeapot(scene)
+                .enableBVH(scene)
+                .build()
+                .renderImage()
+                .printGrid(50, new Color(YELLOW))
                 .writeToImage("teapot3");
     }
 

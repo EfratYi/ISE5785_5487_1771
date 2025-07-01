@@ -10,8 +10,8 @@ import primitives.Vector;
 import scene.Scene;
 import java.util.Random;
 
-class Minip1 {
 
+class Minip1 {
 
     /**
      * Creates an enhanced pyramid geometry composed of base and side triangles.
@@ -159,6 +159,7 @@ class Minip1 {
                 .setEmission(color)
                 .setMaterial(new Material().setKD(0.6).setKS(0.3).setShininess(60));
     }
+
     /**
      * Creates a translucent cube made of triangles.
      * The cube is centered at the given point, with a given size and color.
@@ -387,9 +388,8 @@ class Minip1 {
         );
     }
 
-
     /**
-     * Test method that creates a complex scene with multiple geometries and soft shadows.
+     * Test method that creates a complex scene with multiple geometries and soft shadows.נ
      * The scene includes:
      * - A brown warm sunset-like background
      * - A large floor with matte material
@@ -521,7 +521,23 @@ class Minip1 {
                 .writeToImage("multiply_amount_of_geometries_with_soft_shadows_with_window");
     }
 
-
+    /**
+     * Test method that creates a complex scene with multiple geometries.
+     * The scene includes:
+     * - A brown warm sunset-like background
+     * - A large floor with matte material
+     * - A large mirror reflecting the scene for visual depth
+     * - A large green pyramid on the left
+     * - Glass panes in a window
+     * - Multiple light sources with spotlights and point lights, some with soft shadows
+     * - Two walls with windows
+     * - An ambient light with low intensity
+     * - An array of 10 pyramids arranged in a grid, each with gradually changing colors
+     * - 10 randomly positioned spheres with random colors and sizes
+     * - 5 translucent cubes arranged in a row with a color gradient
+     * Finally, the camera is set up with specified location, direction, view plane distance,
+     * size, and resolution. The scene is rendered and written to an image file.
+     */
     @Test
     void createSceneWithMultipleGeometries() {
         Scene scene = new Scene("Scene with many geometries");
@@ -638,11 +654,3 @@ class Minip1 {
                 .writeToImage("multiply_amount_of_geometries_with_with_window");
     }
 }
-
-
-
-
-
-
-
-

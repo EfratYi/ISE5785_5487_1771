@@ -108,7 +108,7 @@ public class Triangle extends Polygon {
         double maxZ = Math.max(Math.max(p0.getZ(), p1.getZ()), p2.getZ());
 
         // יוצרים את תיבת ה-AABB ושומרים אותה
-        this.boundingBox = new AABB(minX, maxX, minY, maxY, minZ, maxZ);
+        this.boundingBox = new BoundingBox(minX, maxX, minY, maxY, minZ, maxZ);
     }
 
 }
