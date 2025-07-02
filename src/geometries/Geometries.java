@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
+
 /**
  * The Geometries class represents a collection of geometric shapes.
  * It acts as a composite in the Composite design pattern, allowing multiple geometries
@@ -14,6 +15,8 @@ import java.util.List;
  * to be performed on the entire collection as if it were a single geometry.
  */
 public class Geometries extends Intersectable {
+    private enum AXIS {X, Y, Z};
+
     @Override
     public void setBoundingBox() {
         if (shapes.isEmpty()) return;
@@ -36,18 +39,6 @@ public class Geometries extends Intersectable {
         }
 
         this.boundingBox = new BoundingBox(minX, maxX, minY, maxY, minZ, maxZ);
-//        if (shapes.isEmpty()) return;
-//
-//        List<AABB> boxes = new LinkedList<>();
-//        for (Intersectable shape : shapes) {
-//            shape.setBoundingBox();
-//            AABB box = shape.getBoundingBox();
-//            if (box != null) {
-//                boxes.add(box);
-//            }
-//        }
-//
-//        this.boundingBox = AABB.union(boxes);
     }
 
     /**
@@ -62,24 +53,23 @@ public class Geometries extends Intersectable {
         double dy = boundingBox.maxY - boundingBox.minY;
         double dz = boundingBox.maxZ - boundingBox.minZ;
 
-
-        int axis = 0; // 0=X, 1=Y, 2=Z
-        if (dy > dx && dy > dz) axis = 1;
-        else if (dz > dx && dz > dy) axis = 2;
-
-        final int sortAxis = axis;
+        // Determine the longest axis to sort by
+        AXIS axis = AXIS.X;
+        if (dy > dx && dy > dz) axis = AXIS.Y;
+        else if (dz > dx && dz > dy) axis = AXIS.Z;
+        final AXIS finalAxis = axis;
         shapes.sort((a, b) -> {
             double aCoord = 0, bCoord = 0;
-            switch (sortAxis) {
-                case 0 -> {
+            switch (finalAxis) {
+                case AXIS.X -> {
                     aCoord = a.getBoundingBox().minX;
                     bCoord = b.getBoundingBox().minX;
                 }
-                case 1 -> {
+                case AXIS.Y -> {
                     aCoord = a.getBoundingBox().minY;
                     bCoord = b.getBoundingBox().minY;
                 }
-                case 2 -> {
+                case AXIS.Z -> {
                     aCoord = a.getBoundingBox().minZ;
                     bCoord = b.getBoundingBox().minZ;
                 }

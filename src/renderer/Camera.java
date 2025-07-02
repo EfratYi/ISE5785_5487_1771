@@ -34,7 +34,7 @@ public class Camera implements Cloneable {
     private renderer.RayTracerBase rayTracer;
     private int nX = 1;
     private int nY = 1;
-    private int threadsCount = 0; // -2 auto, -1 range/stream, 0 no threads, 1+ number of threads
+    private int threadsCount = 0;
     private static final int SPARE_THREADS = 2; // Spare threads if trying to use all the cores
     private double printInterval = 0; // printing progress percentage interval (0 – no printing)
     private PixelManager pixelManager; // pixel manager object
@@ -134,7 +134,6 @@ public class Camera implements Cloneable {
 
         pIJ = pIJ.add(vTo.scale(distance));
 
-        // return new Ray(p0, pIJ.subtract(p0).normalize());
         return new Ray(p0, pIJ.subtract(p0));//pC-p0
     }
 

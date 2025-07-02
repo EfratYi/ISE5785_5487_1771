@@ -136,11 +136,12 @@ public class SimpleRayTracer extends RayTracerBase {
         return true;
     }
 
+
     /**
-     * Calculates transparency of a path toward a light source.
+     * Calculates the transparency factor for the intersection point.
      *
      * @param intersection the intersection point
-     * @return combined transparency coefficient
+     * @return the transparency factor
      */
     private Double3 transparency(Intersection intersection) {
         Vector l = intersection.lightDirection.scale(-1);
