@@ -2,6 +2,7 @@ package geometries;
 
 import primitives.Ray;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,58 +43,67 @@ public class Geometries extends Intersectable {
     }
 
     /**
-     * Build BVH tree with sorting by longest axis of bounding box.
-     * Splits shapes into two halves recursively.
+     * Builds a Bounding Volume Hierarchy (BVH) for the geometries.
+     * This method recursively divides the shapes into two halves based on the longest axis
+     * of their bounding box, creating a hierarchical structure that optimizes intersection tests.
      */
     public void buildBVH() {
         setBoundingBox();
+
         if (shapes.size() <= 2) return;
 
+        // Calculate the bounding box of the current shapes
         double dx = boundingBox.maxX - boundingBox.minX;
         double dy = boundingBox.maxY - boundingBox.minY;
         double dz = boundingBox.maxZ - boundingBox.minZ;
 
-        // Determine the longest axis to sort by
-        AXIS axis = AXIS.X;
-        if (dy > dx && dy > dz) axis = AXIS.Y;
-        else if (dz > dx && dz > dy) axis = AXIS.Z;
-        final AXIS finalAxis = axis;
+        int axis = 0;
+        if (dy > dx && dy > dz) axis = 1;
+        else if (dz > dx && dz > dy) axis = 2;
+
+        final int sortAxis = axis;
+
+        // Sort the shapes based on the longest axis of the bounding box
         shapes.sort((a, b) -> {
             double aCoord = 0, bCoord = 0;
-            switch (finalAxis) {
-                case AXIS.X -> {
-                    aCoord = a.getBoundingBox().minX;
-                    bCoord = b.getBoundingBox().minX;
+            switch (sortAxis) {
+                case 0 -> {
+                    aCoord = a.getBoundingBox().getCentroidX();
+                    bCoord = b.getBoundingBox().getCentroidX();
                 }
-                case AXIS.Y -> {
-                    aCoord = a.getBoundingBox().minY;
-                    bCoord = b.getBoundingBox().minY;
+                case 1 -> {
+                    aCoord = a.getBoundingBox().getCentroidY();
+                    bCoord = b.getBoundingBox().getCentroidY();
                 }
-                case AXIS.Z -> {
-                    aCoord = a.getBoundingBox().minZ;
-                    bCoord = b.getBoundingBox().minZ;
+                case 2 -> {
+                    aCoord = a.getBoundingBox().getCentroidZ();
+                    bCoord = b.getBoundingBox().getCentroidZ();
                 }
             }
             return Double.compare(aCoord, bCoord);
         });
 
+        // Split the shapes into two halves
         int mid = shapes.size() / 2;
-        List<Intersectable> leftList = shapes.subList(0, mid);
-        List<Intersectable> rightList = shapes.subList(mid, shapes.size());
+        List<Intersectable> leftList = new ArrayList<>(shapes.subList(0, mid));
+        List<Intersectable> rightList = new ArrayList<>(shapes.subList(mid, shapes.size()));
 
+        // Create new Geometries for left and right halves
         Geometries left = new Geometries();
         Geometries right = new Geometries();
         left.add(leftList.toArray(new Intersectable[0]));
         right.add(rightList.toArray(new Intersectable[0]));
 
+        // Recursively build BVH for left and right geometries
         left.buildBVH();
         right.buildBVH();
 
+        // Clear the current shapes and add the left and right geometries
         shapes.clear();
         shapes.add(left);
         shapes.add(right);
-
     }
+
     /**
      * A list that holds all the geometric shapes in the collection.
      */

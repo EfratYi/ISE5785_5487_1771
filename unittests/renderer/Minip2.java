@@ -875,7 +875,7 @@ public class Minip2 {
      * @return a Geometries object representing the floor
      */
     @Test
-    void createSceneWithManual() {
+    void createSceneWithBVHManual() {
         Scene scene = new Scene("Manual BVH Scene");
         scene.setBackground(new Color(120, 80, 50));
         scene.setAmbientLight(new AmbientLight(new Color(17, 17, 17)));

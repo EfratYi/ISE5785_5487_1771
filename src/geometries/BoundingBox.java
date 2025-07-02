@@ -27,30 +27,30 @@ public class BoundingBox {
         this.maxZ = maxZ;
     }
 
+    /**
+     * Constructs an BoundingBox from a list of points.
+     * Assumes the list is non-empty.
+     */
+    public double getCentroidX() {
+        return (minX + maxX) / 2.0;
+    }
 
     /**
-     * Unites multiple bounding boxes into one that contains all of them.
+     * Constructs an BoundingBox from a list of points.
+     * Assumes the list is non-empty.
      */
-    public static BoundingBox union(List<BoundingBox> boxes) {
-        if (boxes.isEmpty()) return null;
-
-        double minX = Double.POSITIVE_INFINITY, maxX = Double.NEGATIVE_INFINITY;
-        double minY = Double.POSITIVE_INFINITY, maxY = Double.NEGATIVE_INFINITY;
-        double minZ = Double.POSITIVE_INFINITY, maxZ = Double.NEGATIVE_INFINITY;
-
-        for (BoundingBox box : boxes) {
-            if (box == null) continue; // מתעלמים מתיבות ריקות
-
-            minX = Math.min(minX, box.minX);
-            maxX = Math.max(maxX, box.maxX);
-            minY = Math.min(minY, box.minY);
-            maxY = Math.max(maxY, box.maxY);
-            minZ = Math.min(minZ, box.minZ);
-            maxZ = Math.max(maxZ, box.maxZ);
-        }
-
-        return new BoundingBox(minX, maxX, minY, maxY, minZ, maxZ);
+    public double getCentroidY() {
+        return (minY + maxY) / 2.0;
     }
+
+    /**
+     * Constructs an BoundingBox from a list of points.
+     * Assumes the list is non-empty.
+     */
+    public double getCentroidZ() {
+        return (minZ + maxZ) / 2.0;
+    }
+
 
     /**
      * Tests whether the given ray intersects this bounding box.
